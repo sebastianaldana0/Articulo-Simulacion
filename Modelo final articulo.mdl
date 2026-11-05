@@ -1,0 +1,404 @@
+{UTF-8}
+Ajuste de la linea de suministro  = A FUNCTION OF( Fraccion de la linea de suministro considerada\
+		,Pollitas deseadas en levante,Pollitas en levante)
+	~	
+	~		|
+
+Ajuste del stock de gallinas  = A FUNCTION OF( Gallinas deseadas,Gallinas en postura)
+	~	
+	~		|
+
+Alimento por huevo  = A FUNCTION OF( )
+	~	
+	~		|
+
+Ampliacion de galpones  = A FUNCTION OF( Capacidad de galpones,Gallinas deseadas)
+	~	
+	~		|
+
+"Brote sanitario (influenza aviar)"  = A FUNCTION OF( )
+	~	
+	~		|
+
+Caja del producto  = A FUNCTION OF( Utilidad del productos)
+	~	
+	~		|
+
+Capacidad de galpones  = A FUNCTION OF( Contruccion de galpones)
+	~	
+	~		|
+
+Capacidad ociosa  = A FUNCTION OF( Capacidad de galpones,Gallinas en postura,Pollitas en levante\
+		)
+	~	
+	~		|
+
+Choque de la TRM  = A FUNCTION OF( )
+	~	
+	~		|
+
+Choque del precio de las materias primas  = A FUNCTION OF( )
+	~	
+	~		|
+
+Compras del fondo de estabilizacion  = A FUNCTION OF( Costo unitario,Precio de mercado\
+		)
+	~	
+	~		|
+
+Consumo per capita de referencia  = A FUNCTION OF( )
+	~	
+	~		|
+
+Contruccion de galpones  = A FUNCTION OF( Ampliacion de galpones,Entrada de productores\
+		)
+	~	
+	~		|
+
+Costo de maiz y soya por kilo de alimento  = A FUNCTION OF( Choque de la TRM,Choque del precio de las materias primas\
+		,Precio internacional de la torta de soya,Precio internacional del maiz,"Tasa de cambio (TRM)"\
+		)
+	~	
+	~		|
+
+Costo del alimento balanceado  = A FUNCTION OF( Costo de maiz y soya por kilo de alimento\
+		)
+	~	
+	~		|
+
+Costo del alimento por huevo  = A FUNCTION OF( Alimento por huevo,Costo del alimento balanceado\
+		)
+	~	
+	~		|
+
+Costo unitario  = A FUNCTION OF( Costo del alimento por huevo,Otros costos por huevo)
+	~	
+	~		|
+
+Demanda de referencia  = A FUNCTION OF( Consumo per capita de referencia,"Poblacion (DANE)"\
+		)
+	~	
+	~		|
+
+Demanda esperada  = A FUNCTION OF( Demanda de referencia)
+	~	
+	~		|
+
+Descarte  = A FUNCTION OF( Gallinas en postura,Vida productiva)
+	~	
+	~		|
+
+Encasetamiento  = A FUNCTION OF( Ajuste de la linea de suministro,Ajuste del stock de gallinas\
+		,Presion para tomar medidas,Presion por ocupar galpones,Reposicion esperada)
+	~	
+	~		|
+
+Entrada de productores  = A FUNCTION OF( Margen esperado,Producores potenciales,Productores activos\
+		)
+	~	
+	~		|
+
+Fraccion de la linea de suministro considerada  = A FUNCTION OF( )
+	~	
+	~		|
+
+Gallinas deseadas  = A FUNCTION OF( Gallinas para atender la demanda,Margen esperado,\
+		Productores activos)
+	~	
+	~		|
+
+Gallinas en postura  = A FUNCTION OF( Descarte,Mortalidad,Pollitas en levante)
+	~	
+	~		|
+
+Gallinas para atender la demanda  = A FUNCTION OF( Demanda esperada)
+	~	
+	~		|
+
+Indice de precios  = A FUNCTION OF( IPC)
+	~	
+	~		|
+
+IPC  = A FUNCTION OF( )
+	~	
+	~		|
+
+Margen esperado  = A FUNCTION OF( Costo unitario,Precio percibido)
+	~	
+	~		|
+
+Mortalidad  = A FUNCTION OF( "Brote sanitario (influenza aviar)",Gallinas en postura)
+	~	
+	~		|
+
+Otros costos por huevo  = A FUNCTION OF( IPC,Salario minimo)
+	~	
+	~		|
+
+"Poblacion (DANE)"  = A FUNCTION OF( )
+	~	
+	~		|
+
+Pollitas deseadas en levante  = A FUNCTION OF( Reposicion esperada)
+	~	
+	~		|
+
+Pollitas en levante  = A FUNCTION OF( Encasetamiento)
+	~	
+	~		|
+
+Precio de mercado  = A FUNCTION OF( Compras del fondo de estabilizacion,Demanda de referencia\
+		,Indice de precios,Produccion de huevos)
+	~	
+	~		|
+
+Precio en granja  = A FUNCTION OF( Precio de mercado)
+	~	
+	~		|
+
+Precio internacional de la torta de soya  = A FUNCTION OF( )
+	~	
+	~		|
+
+Precio internacional del maiz  = A FUNCTION OF( )
+	~	
+	~		|
+
+Precio percibido  = A FUNCTION OF( Precio en granja)
+	~	
+	~		|
+
+Presion para tomar medidas  = A FUNCTION OF( Caja del producto)
+	~	
+	~		|
+
+Presion por ocupar galpones  = A FUNCTION OF( Capacidad ociosa,Margen esperado)
+	~	
+	~		|
+
+Produccion de huevos  = A FUNCTION OF( Gallinas en postura)
+	~	
+	~		|
+
+Producores potenciales  = A FUNCTION OF( Productores activos)
+	~	
+	~		|
+
+Productores activos  = A FUNCTION OF( Entrada de productores,Salida de productores)
+	~	
+	~		|
+
+Reposicion esperada  = A FUNCTION OF( )
+	~	
+	~		|
+
+Salario minimo  = A FUNCTION OF( )
+	~	
+	~		|
+
+Salida de productores  = A FUNCTION OF( Caja del producto,Productores activos)
+	~	
+	~		|
+
+"Tasa de cambio (TRM)"  = A FUNCTION OF( )
+	~	
+	~		|
+
+Utilidad del productos  = A FUNCTION OF( Costo unitario)
+	~	
+	~		|
+
+Vida productiva  = A FUNCTION OF( Margen esperado)
+	~	
+	~		|
+
+********************************************************
+	.Control
+********************************************************~
+		Simulation Control Parameters
+	|
+
+FINAL TIME  = 100
+	~	Month
+	~	The final time for the simulation.
+	|
+
+INITIAL TIME  = 0
+	~	Month
+	~	The initial time for the simulation.
+	|
+
+SAVEPER  = 
+        TIME STEP 
+	~	Month [0,?]
+	~	The frequency with which output is stored.
+	|
+
+TIME STEP  = 1
+	~	Month [0,?]
+	~	The time step for the simulation.
+	|
+
+\\\---/// Sketch information - do not modify anything except names
+V300  Do not put anything below this section - it will be ignored
+*View 1
+$-1--1--1,0,|12||-1--1--1|-1--1--1|-1--1--1|-1--1--1|-1--1--1|96,96,28,2
+10,1,Costo unitario,1605,1453,53,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,2,Utilidad del productos,1239,1430,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,3,Caja del producto,827,1438,66,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,4,2,3,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,5,1,2,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,6,Salida de productores,727,1883,47,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,7,Productores activos,989,1740,47,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,8,Entrada de productores,985,1548,47,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,9,3,6,1,0,0,0,0,192,0,-1--1--1,,1|(742,1648)|
+1,10,6,7,1,0,0,0,0,192,0,-1--1--1,,1|(900,1853)|
+1,11,7,6,1,0,0,0,0,192,0,-1--1--1,,1|(837,1760)|
+1,12,7,8,1,0,0,0,0,192,0,-1--1--1,,1|(944,1649)|
+1,13,8,7,1,0,0,0,0,192,0,-1--1--1,,1|(1048,1636)|
+10,14,Producores potenciales,1235,1644,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,15,7,14,1,0,0,0,0,192,0,-1--1--1,,1|(1120,1720)|
+1,16,14,8,1,0,0,0,0,192,0,-1--1--1,,1|(1130,1581)|
+10,17,Margen esperado,1575,1595,66,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,18,17,8,1,0,0,0,0,192,0,-1--1--1,,1|(1286,1545)|
+1,19,1,17,1,0,0,0,0,192,0,-1--1--1,,1|(1613,1524)|
+10,20,Gallinas deseadas,1551,1764,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,21,17,20,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,22,7,20,1,0,0,0,0,192,0,-1--1--1,,1|(1263,1769)|
+10,23,Ajuste del stock de gallinas,1869,1783,59,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,24,20,23,1,0,0,0,0,192,0,-1--1--1,,1|(1698,1802)|
+10,25,Precio percibido,1865,1597,61,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,26,25,17,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,27,Precio de mercado,2308,1521,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,28,Contruccion de galpones,598,2378,57,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,29,Capacidad de galpones,964,2374,52,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,30,28,29,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,31,Capacidad ociosa,1254,2364,65,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,32,29,31,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,33,Presion por ocupar galpones,1281,2033,62,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,34,31,33,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,35,17,33,1,0,0,0,0,192,0,-1--1--1,,1|(1379,1798)|
+10,36,Presion para tomar medidas,500,1447,57,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,37,3,36,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,38,Encasetamiento,1558,2038,60,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,39,33,38,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,40,23,38,1,0,0,0,0,192,0,-1--1--1,,1|(1733,1914)|
+10,41,Presion para tomar medidas,1379,2186,61,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,42,41,38,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,43,Pollitas en levante,1861,2038,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,44,Gallinas en postura,2213,2036,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,45,38,43,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,46,43,44,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,47,44,23,1,0,0,0,0,192,0,-1--1--1,,1|(2025,1938)|
+10,48,Ajuste de la linea de suministro,1626,2245,64,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,49,43,48,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,50,48,38,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,51,Pollitas en levante,1150,2519,45,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,52,Gallinas en postura,1332,2509,48,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,53,51,31,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,54,52,31,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,55,Entrada de productores,499,2151,51,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,56,55,28,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,57,Reposicion esperada,2153,2256,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,58,Pollitas deseadas en levante,1895,2375,64,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,59,57,38,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,60,57,58,1,0,0,0,0,192,0,-1--1--1,,1|(1964,2353)|
+1,61,58,48,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,62,Produccion de huevos,2572,1663,54,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,63,44,62,1,0,0,0,0,192,0,-1--1--1,,1|(2346,1811)|
+1,64,62,27,1,0,0,0,0,192,0,-1--1--1,,1|(2420,1636)|
+10,65,Demanda de referencia,2607,1202,49,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,66,Compras del fondo de estabilizacion,1861,1306,70,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,67,1,66,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,68,27,66,1,0,0,0,0,192,0,-1--1--1,,1|(2167,1299)|
+1,69,66,27,1,0,0,0,0,192,0,-1--1--1,,1|(2003,1506)|
+1,70,65,27,1,0,0,0,0,192,0,-1--1--1,,1|(2509,1408)|
+10,71,Descarte,2526,2033,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,72,Vida productiva,2662,2144,59,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,73,72,71,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,74,71,44,1,0,0,0,0,192,0,-1--1--1,,1|(2379,2068)|
+1,75,44,71,1,0,0,0,0,192,0,-1--1--1,,1|(2362,1981)|
+10,76,Margen esperado,2867,2165,42,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,77,76,72,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,78,Fraccion de la linea de suministro considerada,1577,2419,71,36,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,79,78,48,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,80,Costo del alimento por huevo,1558,1137,69,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,81,80,1,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,82,Alimento por huevo,1146,1158,50,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,83,82,80,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,84,Costo del alimento balanceado,1501,946,69,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,85,Costo de maiz y soya por kilo de alimento,1478,689,76,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,86,85,84,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,87,84,80,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,88,Choque de la TRM,1789,624,51,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,89,"Tasa de cambio (TRM)",1631,469,59,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,90,Precio internacional de la torta de soya,1388,443,73,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,91,Precio internacional del maiz,1100,490,73,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,92,Choque del precio de las materias primas,1039,657,90,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,93,90,85,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,94,91,85,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,95,89,85,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,96,88,85,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,97,92,85,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,98,IPC,1980,918,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,99,Otros costos por huevo,1800,1135,61,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,100,Salario minimo,1725,964,57,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,101,98,99,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,102,100,99,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,103,99,1,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,104,Indice de precios,2207,1037,64,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,105,98,104,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,106,104,27,1,0,0,0,0,192,0,-1--1--1,,1|(2326,1290)|
+10,107,Precio en granja,2203,1758,61,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,108,27,107,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,109,107,25,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,110,"Poblacion (DANE)",2469,1008,64,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,111,110,65,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,112,Consumo per capita de referencia,2869,999,74,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,113,112,65,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,114,Mortalidad,2346,2260,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,115,114,44,1,0,0,0,0,192,0,-1--1--1,,1|(2318,2144)|
+1,116,44,114,1,0,0,0,0,192,0,-1--1--1,,1|(2245,2171)|
+10,117,"Brote sanitario (influenza aviar)",2395,2384,60,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,118,117,114,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,119,Demanda esperada,2837,1330,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,120,Gallinas para atender la demanda,2912,1471,75,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,121,65,119,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,122,119,120,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,123,Gallinas para atender la demanda,1736,1680,55,36,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,124,123,20,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,125,Ampliacion de galpones,801,2142,54,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,126,20,125,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,127,125,28,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,128,29,125,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+///---\\\
+:L<%^E!@
+5:Ampliacion de galpones
+19:28,0
+24:0
+25:0
+26:0
+23:0
+15:0,0,0,0,0,0
+27:0,
+34:0,
+42:0
+72:0
+73:0
+95:0
+96:0
+97:0
+77:0
+78:0
+102:1
+93:0
+94:0
+92:0
+91:0
+90:0
+87:0
+75:
+43:
+103:8,8,8,3,8
+105:0,0,0,0,0,0,0,0,0,0
+104:Vensim Sans|12||0-0-0|0-0-0|-1--1--1|0-0-255|192-192-192|-1--1--1
