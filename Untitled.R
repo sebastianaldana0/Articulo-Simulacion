@@ -1,7 +1,7 @@
 
-# ---- 0. Configuración -----------------------------------------------
 paquetes <- c("readxl", "dplyr", "tidyr", "ggplot2", "lubridate",
-              "patchwork", "sandwich", "lmtest", "writexl", "scales")
+              "patchwork", "sandwich", "lmtest", "writexl", "scales",
+              "flextable", "officer")
 nuevos <- setdiff(paquetes, rownames(installed.packages()))
 if (length(nuevos)) install.packages(nuevos)
 invisible(lapply(paquetes, library, character.only = TRUE))
@@ -24,9 +24,7 @@ sem <- read_excel(ARCHIVO, sheet = "semanal") |>
 men <- read_excel(ARCHIVO, sheet = "mensual") |>
   mutate(fecha = as.Date(fecha))
 
-obs <- sem |> filter(fecha_fin <= FIN_OBS)   # muestra con producción observada
-
-# ---- Funciones auxiliares -------------------------------------------
+obs <- sem |> filter(fecha_fin <= FIN_OBS)   
 # Correlación cruzada: x ADELANTA a y k semanas  ->  cor(x[t], y[t+k])
 ccf_cruzada <- function(x, y, lag_max = 52) {
   n <- length(x)
@@ -47,8 +45,7 @@ ccf_tab <- tibble(
                             quitar_tendencia(obs$prod), LAG_MAX),
   r_dif_anual = ccf_cruzada(diff(obs$enc, lag = 52),
                             diff(obs$prod, lag = 52), LAG_MAX)
-)
-# El rezago se elige sobre la serie SIN tendencia: en niveles ambas series
+
 # suben con el tiempo y la correlación espuria domina (máximo en lag 0).
 lag_opt <- ccf_tab$lag_sem[which.max(ccf_tab$r_sin_tend)]
 r_opt   <- max(ccf_tab$r_sin_tend)
@@ -61,9 +58,8 @@ if (lag_opt >= LAG_MAX - 4)
   cat("AVISO: el máximo cae en el borde de la ventana (0-52). El rezago real\n",
       "      puede ser mayor (el modelo de Fenavi usa meses t-18 a t-5).\n")
 
-# =====================================================================
 # 1. FIGURA: encasetamiento, producción y precio (2019-2026) + rezago
-# =====================================================================
+
 fecha_ini_est <- FIN_OBS + 1
 xlim_comun <- c(min(sem$fecha_inicio), max(sem$fecha_fin))   # mismo eje X en los 3 paneles
 sombra <- annotate("rect", xmin = fecha_ini_est, xmax = max(sem$fecha_fin),
@@ -122,11 +118,13 @@ fig1 <- p_enc / p_prod / p_precio +
     subtitle = paste0("Línea azul discontinua: encasetamiento desplazado ",
                       lag_opt, " semanas. Sombreado: producción 2026 estimada."),
     caption = "Fuente: Fenavi, DANE-SIPSA, Banco de la República. Elaboración propia.")
-fig1
+ggsave("resultados/fig1_enc_prod_precio.png", fig1, width = 11, height = 9, dpi = 300)
+print(fig1)
+
 # ---- 1b. Figuras auxiliares (series estandarizadas y sin tendencia) ----
 z <- function(x) as.numeric(scale(x))
 xlim_obs <- range(obs$fecha_inicio)
-xlim_obs
+
 # Encasetamiento (desplazado) vs producción: co-movimiento POSITIVO
 d1b <- bind_rows(
   tibble(fecha = obs$fecha_inicio + 7 * lag_opt,
@@ -144,7 +142,9 @@ fig1b <- ggplot(d1b, aes(fecha, v, colour = serie)) +
        subtitle = sprintf("Correlación con rezago de %d semanas: r = %.2f", lag_opt, r_opt),
        x = NULL, y = "Desviaciones estándar", colour = NULL) +
   theme_minimal(base_size = 11) + theme(legend.position = "top")
-fig1b
+ggsave("resultados/fig1b_enc_vs_prod.png", fig1b, width = 10, height = 4.5, dpi = 300)
+print(fig1b)
+
 # Producción vs precio real: co-movimiento NEGATIVO (mismo período, sin rezago)
 r_pp <- cor(quitar_tendencia(obs$prod), quitar_tendencia(obs$precio_real))
 d1c <- bind_rows(
@@ -162,10 +162,9 @@ fig1c <- ggplot(d1c, aes(fecha, v, colour = serie)) +
        subtitle = sprintf("Correlación sin rezago: r = %.2f", r_pp),
        x = NULL, y = "Desviaciones estándar", colour = NULL) +
   theme_minimal(base_size = 11) + theme(legend.position = "top")
-fig1c
-# =====================================================================
+ggsave("resultados/fig1c_prod_vs_precio.png", fig1c, width = 10, height = 4.5, dpi = 300)
+print(fig1c)
 # 2. ESTADÍSTICAS, TENDENCIA, VARIACIÓN ANUAL, CORRELACIÓN CRUZADA
-# =====================================================================
 etiquetas <- c(enc = "Encasetamiento (pollitas/sem)",
                prod = "Producción (millones huevos/sem)",
                precio = "Precio nominal ($/huevo)",
@@ -200,7 +199,6 @@ tendencia <- bind_rows(
   tend_una(sem, "precio"),
   tend_una(sem, "precio_real"))
 print(tendencia, width = Inf)
-
 # 2.3 Variación anual (años calendario completos, hoja mensual)
 anual <- men |>
   mutate(anio = year(fecha)) |>
@@ -214,7 +212,6 @@ anual <- men |>
   mutate(across(c(enc, prod, precio, precio_real),
                 ~ 100 * (.x / lag(.x) - 1), .names = "var_pct_{.col}"))
 print(anual, width = Inf)
-
 # Ene-sep 2026 vs ene-sep 2025 (la producción 2026 es estimada)
 ytd <- men |>
   mutate(anio = year(fecha), mes = month(fecha)) |>
@@ -227,7 +224,6 @@ ytd <- men |>
                    ~ 100 * (.x[anio == 2026] / .x[anio == 2025] - 1),
                    .names = "var_pct_{.col}"))
 print(ytd)
-
 # 2.4 Correlación cruzada encasetamiento -> producción, rezagos 0 a 52
 print(ccf_tab |> filter(lag_sem %% 4 == 0), n = Inf)
 ccf_larga <- ccf_tab |>
@@ -247,11 +243,101 @@ fig2 <- ggplot(ccf_larga, aes(lag_sem, r, colour = serie)) +
                          " meses (n efectivo: los datos semanales salen de datos mensuales)"),
        x = "Rezago k (semanas)", y = "Correlación", colour = NULL) +
   theme_minimal(base_size = 11) + theme(legend.position = "top")
-ggsave("resultados/fig2_ccf_enc_prod.png", fig2, width = 9, height = 5, dpi = 300)
+print(fig2)
+# 2.5 TABLAS DE LA PARTE 2 (formato artículo; se exportan a Word)
+fmt <- function(x, d = 0) {
+  d <- rep_len(d, length(x))
+  mapply(function(xx, dd) {
+    if (is.na(xx)) return("—")
+    format(round(xx, dd), big.mark = ".", decimal.mark = ",",
+           nsmall = dd, trim = TRUE, scientific = FALSE)
+  }, x, d, USE.NAMES = FALSE)
+}
+fmt_p <- function(p) ifelse(p < 0.001, "<0,001",
+                            formatC(p, digits = 3, format = "f", decimal.mark = ","))
 
-# =====================================================================
+estilo <- function(ft) {
+  ft |>
+    theme_booktabs() |>
+    fontsize(size = 9, part = "all") |>
+    align(align = "right", part = "body") |>
+    align(j = 1, align = "left", part = "body") |>
+    align(align = "center", part = "header") |>
+    set_table_properties(width = 1, layout = "autofit")
+}
+
+# ---- Tabla 1. Estadísticas básicas (semanal, 2019-2026) --------------
+dec_est <- c(0, 1, 0, 0)   # decimales por variable (enc, prod, precio, precio real)
+t1 <- tibble(
+  Variable     = estad$var,
+  n            = as.character(estad$n),
+  Media        = fmt(estad$media,   dec_est),
+  Mediana      = fmt(estad$mediana, dec_est),
+  `Desv. est.` = fmt(estad$desv,    dec_est),
+  `CV (%)`     = fmt(100 * estad$cv, 1),
+  `Mín.`       = fmt(estad$min, dec_est),
+  P25          = fmt(estad$p25, dec_est),
+  P75          = fmt(estad$p75, dec_est),
+  `Máx.`       = fmt(estad$max, dec_est))
+ft1 <- flextable(t1) |> estilo() |>
+  add_footer_lines("Datos semanales, 2019-2026. La producción de ene-sep 2026 es estimada.")
+ft1
+# ---- Tabla 2. Tendencia lineal ---------------------------------------
+dec_pend <- c(0, 2, 1, 1)
+t2 <- tibble(
+  Variable                = tendencia$variable,
+  Muestra                 = tendencia$muestra,
+  `Pendiente (por año)`   = fmt(tendencia$pendiente_anual, dec_pend),
+  `EE (Newey-West)`       = fmt(tendencia$ee_hac, dec_pend),
+  `p-valor`               = fmt_p(tendencia$p_valor),
+  `% anual sobre la media` = fmt(tendencia$pct_anual_sobre_media, 2))
+ft2 <- flextable(t2) |> estilo() |>
+  add_footer_lines("Regresión lineal sobre el tiempo; errores estándar Newey-West (rezago 26). La producción se estima solo con datos observados (hasta dic-2025).")
+ft2
+# ---- Tabla 3. Variación anual (2019-2025 + ene-sep 2026) -------------
+t3_niv <- anual |>
+  filter(anio >= 2019) |>
+  transmute(
+    anio     = as.character(anio),
+    enc      = fmt(enc / 1e6, 2),        v_enc    = fmt(var_pct_enc, 1),
+    prod     = fmt(prod, 0),             v_prod   = fmt(var_pct_prod, 1),
+    precio   = fmt(precio, 0),           v_precio = fmt(var_pct_precio, 1),
+    preal    = fmt(precio_real, 0),      v_preal  = fmt(var_pct_precio_real, 1))
+t3_ytd <- tibble(
+  anio = "Ene-sep 2026 vs ene-sep 2025",
+  enc = "—",    v_enc    = fmt(ytd$var_pct_enc, 1),
+  prod = "—",   v_prod   = fmt(ytd$var_pct_prod, 1),
+  precio = "—", v_precio = fmt(ytd$var_pct_precio, 1),
+  preal = "—",  v_preal  = fmt(ytd$var_pct_precio_real, 1))
+t3 <- bind_rows(t3_niv, t3_ytd)
+ft3 <- flextable(t3) |>
+  set_header_labels(anio = "Año",
+                    enc = "Encasetamiento\n(millones de pollitas)", v_enc = "Var. %",
+                    prod = "Producción\n(millones de huevos)",      v_prod = "Var. %",
+                    precio = "Precio nominal\n($/huevo)",           v_precio = "Var. %",
+                    preal = "Precio real\n($2019/huevo)",           v_preal = "Var. %") |>
+  estilo() |>
+  add_footer_lines("Encasetamiento y producción: suma anual. Precios: promedio anual. La producción de 2026 es estimada.")
+ft3
+# ---- Tabla 4. Correlación cruzada encasetamiento -> producción -------
+t4_raw <- ccf_tab |>
+  filter(lag_sem %% 4 == 0 | lag_sem == lag_opt) |>
+  distinct(lag_sem, .keep_all = TRUE)
+t4 <- tibble(
+  `Rezago (semanas)` = as.character(t4_raw$lag_sem),
+  `Rezago (meses)`   = fmt(t4_raw$lag_meses, 1),
+  `Niveles`          = fmt(t4_raw$r_nivel, 2),
+  `Sin tendencia`    = fmt(t4_raw$r_sin_tend, 2),
+  `Diferencia anual` = fmt(t4_raw$r_dif_anual, 2))
+fila_max <- which(t4_raw$lag_sem == lag_opt)
+ft4 <- flextable(t4) |> estilo() |>
+  bold(i = fila_max, part = "body") |>
+  bg(i = fila_max, bg = "#fff2cc", part = "body") |>
+  add_footer_lines(sprintf(
+    "r(k) = cor(encasetamiento[t], producción[t+k]), k = 0 a 52 semanas (se muestra cada 4). En negrita: máximo de la serie sin tendencia. Banda aproximada ±%s (n efectivo = %d meses).",
+    fmt(banda, 2), n_ef))
+ft4
 # 3a. PERÍODO DEL CICLO (2 a 4 años) - hoja mensual, 2017-2025 observado
-# =====================================================================
 mo <- men |> filter(fecha <= FIN_OBS)
 series_ciclo <- list(
   "Encasetamiento"          = mo$encasetamiento_pollitas,
@@ -297,14 +383,7 @@ fig3 <- ggplot(perfiles, aes(periodo, r2, colour = serie)) +
   theme_minimal(base_size = 11) + theme(legend.position = "top")
 ggsave("resultados/fig3_periodo_ciclo.png", fig3, width = 8, height = 4.5, dpi = 300)
 
-# =====================================================================
 # 3b. ELASTICIDAD PRECIO DE LA DEMANDA (log-log, hoja mensual)
-# =====================================================================
-# Cantidad = huevos consumidos por persona-día (producción / población; las
-# exportaciones son <0.2% y las importaciones son huevo fértil).
-# Identificación: la producción está predeterminada por el encasetamiento de
-# 5-18 meses atrás (oferta inelástica en el corto plazo), así que los
-# movimientos del precio recorren la curva de demanda.
 el <- men |>
   filter(fecha <= FIN_OBS, !is.na(poblacion)) |>
   mutate(q = log(produccion_huevos_millones * 1e6 / dias_mes / poblacion),
@@ -335,9 +414,7 @@ cat("\nElasticidad-ingreso (M3, salario mínimo real):",
 cat("|e| < 1 => demanda inelástica. Con tendencia y precio real ambos crecientes,\n",
     "los modelos en niveles (M1-M2) son frágiles; M3-M4 quitan la tendencia.\n")
 
-# =====================================================================
 # 4. TABLA DE PARÁMETROS (valor y fuente)
-# =====================================================================
 costo_2019 <- mean(sem$costo[year(sem$fecha_inicio) == 2019])
 costo_2026 <- mean(sem$costo[year(sem$fecha_inicio) == 2026])
 costo_ult  <- tail(sem$costo, 1)
@@ -376,12 +453,14 @@ parametros <- tribble(
   "La base no lo incluye; hace falta si el modelo amortiza el ave.")
 print(parametros, width = Inf)
 
-# =====================================================================
 # Exportar todo a Excel
-# =====================================================================
-write_xlsx(list(estadisticas = estad, tendencia = tendencia,
+
+write_xlsx(list(tabla1_estadisticas = t1, tabla2_tendencia = t2,
+                tabla3_variacion_anual = t3, tabla4_ccf = t4,
+                estadisticas = estad, tendencia = tendencia,
                 variacion_anual = anual, variacion_ene_sep_2026 = ytd,
                 ccf_0_52_sem = ccf_tab, ciclo_2_4_anios = ciclo,
                 elasticidad = elasticidad, parametros = parametros),
            "resultados/resultados_ciclo_huevo.xlsx")
 cat("\nListo. Revisa la carpeta 'resultados/'.\n")
+
