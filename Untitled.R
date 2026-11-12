@@ -44,7 +44,7 @@ ccf_tab <- tibble(
   r_sin_tend  = ccf_cruzada(quitar_tendencia(obs$enc),
                             quitar_tendencia(obs$prod), LAG_MAX),
   r_dif_anual = ccf_cruzada(diff(obs$enc, lag = 52),
-                            diff(obs$prod, lag = 52), LAG_MAX)
+                            diff(obs$prod, lag = 52), LAG_MAX))
 
 # suben con el tiempo y la correlación espuria domina (máximo en lag 0).
 lag_opt <- ccf_tab$lag_sem[which.max(ccf_tab$r_sin_tend)]

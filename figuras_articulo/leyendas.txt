@@ -1,0 +1,35 @@
+Leyendas sugeridas (título, lectura y fuente), en el orden del artículo
+
+Tabla 1. Datos utilizados.
+Fuente: elaboración propia con base en Fenavi, DANE, Banco Mundial, Banco de la República e ICA.
+
+Figura 1. Encasetamiento, producción, precio y costo del huevo en Colombia, 2019-2026.
+Cada fase de expansión del encasetamiento antecede un aumento de la producción y una caída del precio real; las fases de contracción, lo contrario. La producción de ene-sep 2026 es estimada.
+Fuente: elaboración propia con base en Fenavi, DANE-SIPSA y DANE-IPC.
+
+Tabla 2. Magnitud de las oscilaciones del sector, 2019-2026.
+Fuente: elaboración propia con base en Fenavi, DANE-SIPSA, DANE e ICA.
+
+Figura 2. Variación anual del encasetamiento y de la producción de huevo, 2019-2026.
+La producción repite los movimientos del encasetamiento con un rezago de 13 a 15 meses (correlación máxima a los 12 meses, r = 0,94): lo que se encaseta hoy define la oferta del año siguiente.
+Fuente: elaboración propia con base en Fenavi.
+
+Figura 3. Producción por habitante frente a su tendencia y precio real del huevo, 2019-2026.
+Los periodos en que la producción supera su tendencia (sobreoferta) coinciden con precios reales por debajo de la suya, y viceversa (r = -0,59).
+Fuente: elaboración propia con base en Fenavi, DANE-SIPSA y DANE.
+
+Figura 4. Razón precio/costo y variación anual del encasetamiento, 2019-2026.
+El margen estrecho de 2020-2021 precede la caída del encasetamiento de 2021-2022; el margen máximo de nov-2023 precede el récord de 2024-2025, y su descenso, el recorte de 2026.
+Fuente: elaboración propia con base en Fenavi y DANE-SIPSA.
+
+Figura 5. Correlación cruzada entre encasetamiento y producción (a) y entre margen y encasetamiento (b).
+La producción responde al encasetamiento entre las semanas 20 y 80 (máximo a las 48, r = 0,48); el encasetamiento responde al margen entre 7 y 16 meses después (máximo a los 16, r = 0,43).
+Fuente: elaboración propia con base en Fenavi y DANE-SIPSA.
+
+Tabla 3. Eslabones del bucle de producción de huevo: retardos y evidencia en los datos.
+Fuente: elaboración propia.
+
+Tabla 4. Fases del ciclo del huevo en Colombia, 2019-2026.
+Los años de margen alto preceden la expansión del encasetamiento y de la capacidad instalada; uno o dos años después crece la producción y cae el precio real.
+Fuente: elaboración propia con base en Fenavi, DANE-SIPSA, DANE e ICA.
+
