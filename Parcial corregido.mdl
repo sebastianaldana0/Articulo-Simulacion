@@ -1,0 +1,1756 @@
+{UTF-8}
+Pollitas en levante=
+	INTEG(Encasetamiento-Maduración, Encasetamiento inicial*Tiempo de levante)
+	~	aves
+	~	Aves encasetadas que todavía no ponen. Valor inicial: lo que viene en \
+		camino al arrancar.
+	|
+
+Gallinas en postura temprana=
+	INTEG(Maduración-Paso a postura media-Sacrificio en postura temprana, Gallinas iniciales\
+		/3)
+	~	aves
+	~	Primera etapa de la postura (un tercio de la vida productiva). Arranca con \
+		un tercio de las gallinas iniciales.
+	|
+
+Gallinas en postura media=
+	INTEG(Paso a postura media-Paso a postura tardía-Sacrificio en postura media, Gallinas iniciales\
+		/3)
+	~	aves
+	~	Segunda etapa de la postura.
+	|
+
+Gallinas en postura tardía=
+	INTEG(Paso a postura tardía-Descarte-Mortalidad-Sacrificio en postura tardía, Gallinas iniciales\
+		/3)
+	~	aves
+	~	Última etapa; de aquí salen las gallinas al final del ciclo.
+	|
+
+Gallinas en postura=
+	Gallinas en postura temprana+Gallinas en postura media+Gallinas en postura tardía
+	~	aves
+	~	Total de gallinas en producción. Con tres etapas la salida se concentra \
+		cerca del final de la vida productiva, como en los lotes reales (prueba \
+		del 12-nov: la salida de primer orden reproducía menos de la mitad de la \
+		amplitud de la producción de Fenavi).
+	|
+
+Tiempo por etapa de postura=
+	Vida productiva/3
+	~	Week
+	~	Tiempo medio en cada etapa. Si cambia la vida productiva (bucle B4), \
+		cambia el tiempo de las tres etapas.
+	|
+
+Paso a postura media=
+	Gallinas en postura temprana/Tiempo por etapa de postura
+	~	aves/Week
+	~		|
+
+Paso a postura tardía=
+	Gallinas en postura media/Tiempo por etapa de postura
+	~	aves/Week
+	~		|
+
+Encasetamiento=
+	Encasetamiento indicado-Presión para tomar medidas*MAX(0, Encasetamiento indicado-Cuota de encasetamiento\
+		)
+	~	aves/Week
+	~	Pollitas de un día que entran a las granjas. Sin política es igual al \
+		indicado; con la cuota activa no pasa de la cuota.
+	|
+
+Maduración=
+	DELAY3I(Encasetamiento, Tiempo de levante, Encasetamiento inicial)
+	~	aves/Week
+	~	Pollitas que terminan el levante y entran a postura (demora material de \
+		orden 3).
+	|
+
+Descarte=
+	Gallinas en postura tardía*(1-Fracción de mortalidad)/Tiempo por etapa de postura
+	~	aves/Week
+	~	Gallinas que salen al final de su vida productiva.
+	|
+
+Mortalidad=
+	Gallinas en postura tardía*Fracción de mortalidad/Tiempo por etapa de postura
+	~	aves/Week
+	~	Muertes normales del ciclo. Se cargan a la salida: la postura semanal por \
+		ave ya está calculada por pollita encasetada, así que incluye la \
+		mortalidad.
+	|
+
+Tasa de sacrificio por brote=
+	Interruptor del brote*Fracción sacrificada por el brote/Duración del brote*PULSE(Semana de inicio del brote\
+		, Duración del brote)
+	~	1/Week
+	~	Fracción de las gallinas que se sacrifica cada semana mientras dura el \
+		brote (escenario).
+	|
+
+Sacrificio en postura tardía=
+	Gallinas en postura tardía*Tasa de sacrificio por brote
+	~	aves/Week
+	~		|
+
+Sacrificio en postura media=
+	Gallinas en postura media*Tasa de sacrificio por brote
+	~	aves/Week
+	~		|
+
+Sacrificio en postura temprana=
+	Gallinas en postura temprana*Tasa de sacrificio por brote
+	~	aves/Week
+	~		|
+
+Vida productiva=
+	Vida productiva normal*Efecto del margen en la vida productiva(Brecha de margen)
+	~	Week
+	~	Con margen bajo se descarta antes; con margen alto se alarga la postura \
+		(bucle B4).
+	|
+
+Producción de huevos=
+	Gallinas en postura*Postura semanal por ave
+	~	huevos/Week
+	~		|
+
+Gallinas iniciales=
+	Producción inicial de huevos/Postura semanal por ave
+	~	aves
+	~	Gallinas que se necesitan para la producción de la semana 0.
+	|
+
+Producción inicial de huevos=
+	2.66776e+08
+	~	huevos/Week
+	~	Producción de la semana 0 (enero de 2019) en la base de datos: tasa \
+		mensual de Fenavi × 12/365,25 × 7. Clase D.
+	|
+
+Encasetamiento inicial=
+	821165
+	~	aves/Week
+	~	Promedio semanal del 13-ago al 31-dic-2018: las pollitas que siguen en \
+		levante el 1-ene-2019 (Fenavi). Para la prueba de equilibrio: 772700 \
+		(Gallinas iniciales/Vida productiva normal). Clase C.
+	|
+
+Tiempo de levante=
+	20
+	~	Week
+	~	Fenaviquín 440, p. 6: 20 semanas de levante. Clase F.
+	|
+
+Vida productiva normal=
+	60
+	~	Week
+	~	Fenaviquín 440, p. 6: 80 semanas de vida, 20 de levante. Sensibilidad de \
+		51 a 71. Clase F.
+	|
+
+Fracción de mortalidad=
+	0.12
+	~	Dmnl
+	~	Fenaviquín 440, p. 6: 12 % de mortalidad en el ciclo. Solo reparte la \
+		salida entre descarte y muerte. Clase F.
+	|
+
+Postura semanal por ave=
+	5.75
+	~	huevos/(aves*Week)
+	~	345,2 huevos por pollita encasetada (k = 24,66 huevos por pollita al mes \
+		durante 14 meses, error medio 0,58 % contra Fenavi 2019-2025) entre 60 \
+		semanas. Clase C.
+	|
+
+Efecto del margen en la vida productiva(
+	[(-1,0)-(1,1.5)],(-1,0.88),(-0.5,0.896),(-0.2,0.944),(0,1),(0.2,1.064),(0.5,1.12),(1\
+		,1.144))
+	~	Dmnl
+	~	Vale 1 con el margen normal; de 0,88 a 1,144 equivale a unas 53 a 69 \
+		semanas. Fenaviquín 440, p. 8 nombra la reducción del ciclo como vía de \
+		ajuste, sin cifras. Clase K: por calibrar.
+	|
+
+Choque del precio de las materias primas=
+	0
+	~	Dmnl
+	~	0 = base; 0.15 = maíz y torta de soya 15 % más caros desde la semana del \
+		choque. Clase P.
+	|
+
+Choque de la TRM=
+	0
+	~	Dmnl
+	~	0 = base; 0.1 = devaluación de 10 %; -0.1 = revaluación. Clase P.
+	|
+
+Semana de inicio del choque=
+	400
+	~	Week
+	~	400 = comienzos de septiembre de 2026, después del último dato. Clase P.
+	|
+
+Interruptor del brote=
+	0
+	~	Dmnl
+	~	0 = sin brote; 1 = escenario de brote sanitario. Clase P.
+	|
+
+Semana de inicio del brote=
+	430
+	~	Week
+	~	Escenario Brote2027: semana 430 = finales de marzo de 2027. La corrida \
+		histórica va sin brote (ICA: los focos de 2022-2023 fueron en traspatio). \
+		Clase P.
+	|
+
+Duración del brote=
+	18
+	~	Week
+	~	Mismo brote de Jalisco: 18-jun a 24-oct-2012. Clase F.
+	|
+
+Fracción sacrificada por el brote=
+	0.1
+	~	Dmnl
+	~	Escenario: análogo del brote H7N3 de Jalisco (México, 2012), 22,3 \
+		millones de ponedoras, cerca de 11 % (SENASICA). Clase F.
+	|
+
+Reposición esperada=
+	SMOOTHI(Gallinas en postura/Vida productiva normal, Tiempo de reposición, Gallinas iniciales\
+		/Vida productiva normal)
+	~	aves/Week
+	~	Ancla de la regla: reponer lo que sale con la vida productiva normal.
+	|
+
+Tiempo de reposición=
+	4
+	~	Week
+	~	Fenavi publica el encasetamiento cada mes. Clase S.
+	|
+
+Pollitas deseadas en levante=
+	Reposición esperada*Tiempo de levante
+	~	aves
+	~	Línea de suministro deseada.
+	|
+
+Ajuste de la línea de suministro=
+	Fracción de la línea de suministro considerada*(Pollitas deseadas en levante-Pollitas en levante\
+		)/Tiempo de ajuste de gallinas
+	~	aves/Week
+	~	Bucle B3. Con fracción 0,33 el productor ve solo un tercio de lo que \
+		viene en camino (Sterman, 1989b).
+	|
+
+Fracción de la línea de suministro considerada=
+	0.34
+	~	Dmnl
+	~	Sterman (1989), tabla 4: peso medio de 0,34 en el juego de la cerveza. 1 = \
+		información completa. Clase F.
+	|
+
+Gallinas deseadas=
+	MAX(0, Gallinas para atender la demanda+(Productores activos-Productores iniciales)*\
+		Gallinas por productor nuevo)*Efecto del margen en las gallinas deseadas(Brecha de margen\
+		)
+	~	aves
+	~	Las gallinas que los productores quieren tener: las que pide el mercado, \
+		más las de los productores que entran, ajustadas por el margen.
+	|
+
+Gallinas para atender la demanda=
+	Demanda esperada/Postura semanal por ave
+	~	aves
+	~	Gallinas que se necesitan para atender la demanda que esperan los \
+		productores.
+	|
+
+Demanda esperada=
+	SMOOTH(Demanda de referencia, Tiempo para percibir la demanda)
+	~	huevos/Week
+	~	Los productores conocen el crecimiento del consumo con rezago (cifras \
+		anuales de Fenavi).
+	|
+
+Tiempo para percibir la demanda=
+	52
+	~	Week
+	~	Fenavi publica el consumo per cápita una vez al año. Clase S.
+	|
+
+Ajuste del stock de gallinas=
+	(Gallinas deseadas-Gallinas en postura)/Tiempo de ajuste de gallinas
+	~	aves/Week
+	~	Bucle B2.
+	|
+
+Tiempo de ajuste de gallinas=
+	18
+	~	Week
+	~	Clase K: por calibrar entre 8 y 26 semanas.
+	|
+
+Encasetamiento indicado=
+	MAX(0, Reposición esperada+Ajuste del stock de gallinas+Ajuste de la línea de suministro\
+		+Presión por ocupar galpones)
+	~	aves/Week
+	~	Regla de anclaje y ajuste; nunca negativo.
+	|
+
+Efecto del margen en las gallinas deseadas(
+	[(-1,0)-(1,2)],(-1,0.2),(-0.5,0.5),(-0.25,0.76),(0,1),(0.25,1.24),(0.5,1.44),(1,1.6)\
+		)
+	~	Dmnl
+	~	Vale 1 con el margen normal. Clase K: por calibrar.
+	|
+
+Demanda de referencia=
+	Población*Consumo per cápita de referencia/Semanas por año
+	~	huevos/Week
+	~	Huevos que se comprarían al precio de referencia (en pesos de 2019).
+	|
+
+Población=
+	Tabla población(Time)
+	~	personas
+	~	DANE, proyecciones de población.
+	|
+
+Tabla población(
+	[(0,0)-(470,6e+07)],(2,4.88081e+07),(6.43,4.88937e+07),(10.43,4.8971e+07),(14.86,4.90566e+07\
+		),(19.14,4.91395e+07),(23.57,4.92251e+07),(27.86,4.93126e+07),(32.29,4.94078e+07),(\
+		36.71,4.95031e+07),(41,4.95952e+07),(45.43,4.96904e+07),(49.71,4.97826e+07),(54.14,\
+		4.98778e+07),(58.57,4.9973e+07),(62.71,5.00621e+07),(67.14,5.01573e+07),(71.43,5.02495e+07\
+		),(75.86,5.03447e+07),(80.14,5.04206e+07),(84.57,5.04821e+07),(89,5.05437e+07),(93.29\
+		,5.06033e+07),(97.71,5.06648e+07),(102,5.07244e+07),(106.43,5.0786e+07),(110.86,5.08475e+07\
+		),(114.86,5.09031e+07),(119.29,5.09647e+07),(123.57,5.10243e+07),(128,5.10858e+07),\
+		(132.29,5.11373e+07),(136.71,5.11822e+07),(141.14,5.1227e+07),(145.43,5.12704e+07),\
+		(149.86,5.13152e+07),(154.14,5.13586e+07),(158.57,5.14035e+07),(163,5.14483e+07),(167\
+		,5.14888e+07),(171.43,5.15336e+07),(175.71,5.1577e+07),(180.14,5.16219e+07),(184.43\
+		,5.1663e+07),(188.86,5.17032e+07),(193.29,5.17435e+07),(197.57,5.17824e+07),(202,5.18226e+07\
+		),(206.29,5.18615e+07),(210.71,5.19017e+07),(215.14,5.19419e+07),(219.14,5.19783e+07\
+		),(223.57,5.20185e+07),(227.86,5.20574e+07),(232.29,5.20976e+07),(236.57,5.21374e+07\
+		),(241,5.21795e+07),(245.43,5.22216e+07),(249.71,5.22623e+07),(254.14,5.23043e+07),\
+		(258.43,5.23451e+07),(262.86,5.23871e+07),(267.29,5.24292e+07),(271.43,5.24685e+07)\
+		,(275.86,5.25106e+07),(280.14,5.25513e+07),(284.57,5.25934e+07),(288.86,5.2632e+07)\
+		,(293.29,5.26696e+07),(297.71,5.27073e+07),(302,5.27438e+07),(306.43,5.27814e+07),(\
+		310.71,5.28179e+07),(315.14,5.28555e+07),(319.57,5.28932e+07),(323.57,5.29272e+07),\
+		(328,5.29649e+07),(332.29,5.30013e+07),(336.71,5.3039e+07),(341,5.30713e+07),(345.43\
+		,5.31003e+07),(349.86,5.31294e+07),(354.14,5.31575e+07),(358.57,5.31865e+07),(362.86\
+		,5.32146e+07),(367.29,5.32436e+07),(371.71,5.32727e+07),(375.71,5.32989e+07),(380.14\
+		,5.3328e+07),(384.43,5.33561e+07),(388.86,5.33851e+07),(393.14,5.3412e+07),(397.57,\
+		5.34386e+07),(402,5.34652e+07),(443.14,5.37122e+07))
+	~	personas
+	~	DANE, proyecciones PPED 2018-2070 (actualización jul-2025), interpoladas \
+		a mitad de mes; último punto: 30-jun-2027.
+	|
+
+Consumo per cápita de referencia=
+	Tabla consumo per cápita de referencia(Time)
+	~	huevos/(personas*año)
+	~	No es el consumo observado: es el consumo observado corregido por el \
+		precio (ver el documento).
+	|
+
+Tabla consumo per cápita de referencia(
+	[(0,0)-(470,450)],(0,280.1),(26.07,291.8),(78.25,320.4),(130.43,355),(182.61,368.4),\
+		(234.79,377.8),(286.97,368),(339.15,374.9),(391.33,370.9),(470,370.9))
+	~	huevos/(personas*año)
+	~	Consumo aparente (producción × 12 / población) × (precio real / \
+		300,75)^0,462, promedio de cada año en la mitad del año; punto inicial = \
+		enero de 2019 (280,1). 2026 = ene-sep. 2027: constante. Recalcular si \
+		cambia la elasticidad.
+	|
+
+Semanas por año=
+	52.18
+	~	Week/año
+	~	365,25 / 7. Clase C.
+	|
+
+Oferta en el mercado=
+	MAX(Producción de huevos-Compras del fondo de estabilización, Oferta mínima)
+	~	huevos/Week
+	~	Lo que llega al consumidor. Las exportaciones (0,2 % de la producción) se \
+		omiten.
+	|
+
+Oferta mínima=
+	1
+	~	huevos/Week
+	~	Evita dividir por cero en las pruebas de condiciones extremas.
+	|
+
+Precio de mercado=
+	Precio de referencia*Índice de precios*(Demanda de referencia/Oferta en el mercado)\
+		^(1/Elasticidad precio de la demanda)
+	~	COP/huevo
+	~	Precio mayorista del huevo; se compara con la serie de referencia rojo AA \
+		(Precio de mercado observado). Iguala la demanda con la oferta de la \
+		semana.
+	|
+
+Precio de referencia=
+	295
+	~	COP/huevo
+	~	Precio mayorista del huevo (referencia rojo AA, SIPSA, 19 mercados) en \
+		pesos de enero de 2019: 300,75 (promedio de 2019) × 100,60/102,556 (IPC \
+		de enero entre IPC promedio de 2019). Así cuadra con el Índice de \
+		precios, que vale 1 en la semana 0. Clase C.
+	|
+
+Elasticidad precio de la demanda=
+	0.462
+	~	Dmnl
+	~	En valor absoluto. Fenavi, Documentos Avícolas n.º 7 (Torres Castro, \
+		2016): -0,462. Sensibilidad de 0,3 a 0,6. Si se cambia, hay que recalcular \
+		el consumo de referencia. Clase F.
+	|
+
+Índice de precios=
+	Tabla IPC(Time)/Tabla IPC(INITIAL TIME)
+	~	Dmnl
+	~	Pasa los pesos de enero de 2019 a pesos corrientes. Vale 1 en la semana 0.
+	|
+
+Tabla IPC(
+	[(0,0)-(470,200)],(2,100.6),(6.43,101.18),(10.43,101.62),(14.86,102.12),(19.14,102.44\
+		),(23.57,102.71),(27.86,102.94),(32.29,103.03),(36.71,103.26),(41,103.43),(45.43,103.54\
+		),(49.71,103.8),(54.14,104.24),(58.57,104.94),(62.71,105.53),(67.14,105.7),(71.43,105.36\
+		),(75.86,104.97),(80.14,104.97),(84.57,104.96),(89,105.29),(93.29,105.23),(97.71,105.08\
+		),(102,105.48),(106.43,105.91),(110.86,106.58),(114.86,107.12),(119.29,107.76),(123.57\
+		,108.84),(128,108.78),(132.29,109.14),(136.71,109.62),(141.14,110.04),(145.43,110.06\
+		),(149.86,110.6),(154.14,111.41),(158.57,113.26),(163,115.11),(167,116.26),(171.43,\
+		117.71),(175.71,118.7),(180.14,119.31),(184.43,120.27),(188.86,121.5),(193.29,122.63\
+		),(197.57,123.51),(202,124.46),(206.29,126.03),(210.71,128.27),(215.14,130.4),(219.14\
+		,131.77),(223.57,132.8),(227.86,133.38),(232.29,133.78),(236.57,134.45),(241,135.39\
+		),(245.43,136.11),(249.71,136.45),(254.14,137.09),(258.43,137.72),(262.86,138.98),(\
+		267.29,140.49),(271.43,141.48),(275.86,142.32),(280.14,142.92),(284.57,143.38),(288.86\
+		,143.67),(293.29,143.67),(297.71,144.02),(302,143.83),(306.43,144.22),(310.71,144.88\
+		),(315.14,146.24),(319.57,147.9),(323.57,148.68),(328,149.66),(332.29,150.14),(336.71\
+		,150.3),(341,150.71),(345.43,150.99),(349.86,151.48),(354.14,151.76),(358.57,151.87\
+		),(362.86,152.27),(367.29,154.07),(371.71,155.73),(375.71,156.94),(380.14,158.17),(\
+		384.43,158.91),(388.86,159.53),(393.14,159.79),(397.57,160.42),(402,161),(406.29,161.82\
+		),(410.71,162.64),(415,163.47),(419.43,164.3),(423.86,165.14),(427.86,165.98),(432.29\
+		,166.83),(436.57,167.68),(441,168.53),(445.29,169.39),(449.71,170.25),(454.14,171.12\
+		),(458.43,171.99),(462.86,172.87),(467.14,173.75))
+	~	Dmnl
+	~	IPC total DANE (dic-2018=100), mensual. Oct-2026 a dic-2027: supuesto, \
+		inflación de los últimos 12 meses (6.28% anual). Promedio 2019 = 102.556.
+	|
+
+Precio en granja=
+	Precio de mercado*Participación del productor en el precio
+	~	COP/huevo
+	~	Lo que recibe el productor. Fenavi advierte que el precio de la central no \
+		es el de la granja.
+	|
+
+Participación del productor en el precio=
+	0.83
+	~	Dmnl
+	~	0,85 (supuesto: precio en granja frente al mayorista) × 0,98 (factor de \
+		surtido: el precio AA frente al costo del huevo promedio). Sensibilidad de \
+		0,75 a 0,95. Clase S.
+	|
+
+Precio percibido=
+	SMOOTH(Precio en granja, Tiempo de percepción del precio)
+	~	COP/huevo
+	~	Expectativas adaptativas (Nerlove, 1958).
+	|
+
+Tiempo de percepción del precio=
+	6
+	~	Week
+	~	Expectativa adaptativa (Nerlove, 1958). Clase K: por calibrar entre 4 y 26 \
+		semanas.
+	|
+
+Margen esperado=
+	(Precio percibido-Costo unitario)/Costo unitario
+	~	Dmnl
+	~		|
+
+Margen normal=
+	INITIAL(Margen esperado)
+	~	Dmnl
+	~	Margen de 2019, que se toma como el normal. Todas las tablas de efecto se \
+		leen contra él.
+	|
+
+Brecha de margen=
+	Margen esperado-Margen normal
+	~	Dmnl
+	~	Entrada de todas las tablas de efecto del margen.
+	|
+
+Consumo aparente por persona=
+	Oferta en el mercado*Semanas por año/Población
+	~	huevos/(personas*año)
+	~	Se compara con el consumo per cápita que publica Fenavi.
+	|
+
+Costo unitario=
+	Costo del alimento por huevo+Otros costos por huevo
+	~	COP/huevo
+	~	Costo de producir un huevo en granja (pesos corrientes).
+	|
+
+Costo del alimento por huevo=
+	Costo del alimento balanceado*Alimento por huevo
+	~	COP/huevo
+	~		|
+
+Alimento por huevo=
+	0.1601
+	~	kg/huevo
+	~	56,035 kg de alimento acumulado por ave entre 350 huevos (Fenaviquín 381, \
+		416 y 456). Clase F.
+	|
+
+Costo del alimento balanceado=
+	Costo de materias primas trasladado*Factor de fabricación del alimento
+	~	COP/kg
+	~		|
+
+Factor de fabricación del alimento=
+	1.174
+	~	Dmnl
+	~	Otros ingredientes, fabricación y margen del fabricante. Calibrado junto \
+		con el tiempo de traslado contra el costo de Fenavi. Clase K.
+	|
+
+Costo de maíz y soya por kilo de alimento=
+	(Participación del maíz en el alimento*Precio internacional del maíz+Participación de la soya en el alimento\
+		*Precio internacional de la torta de soya)*Tasa de cambio*(1+Sobrecosto de importación\
+		)/Kilos por tonelada
+	~	COP/kg
+	~		|
+
+Costo de materias primas trasladado=
+	SMOOTH(Costo de maíz y soya por kilo de alimento, Tiempo de traslado al costo del alimento\
+		)
+	~	COP/kg
+	~	El precio internacional llega al costo del alimento con demora \
+		(inventarios de grano, contratos, rezago de 2 meses de la estructura de \
+		Fenavi).
+	|
+
+Tiempo de traslado al costo del alimento=
+	26
+	~	Week
+	~	Calibrado contra el costo total de Fenavi 2019-2026: con 20 a 39 semanas \
+		el error medio queda entre 4,1 % y 4,4 %. Clase K.
+	|
+
+Participación del maíz en el alimento=
+	0.632
+	~	Dmnl
+	~	Peso que reproduce la fórmula básica del alimento huevo de Fenavi \
+		(Fenaviquín 456, p. 16). Clase C.
+	|
+
+Participación de la soya en el alimento=
+	0.191
+	~	Dmnl
+	~	Misma regresión. El resto de la fórmula entra por el factor de \
+		fabricación. Clase C.
+	|
+
+Sobrecosto de importación=
+	0.395
+	~	Dmnl
+	~	Precio de Fenavi puesto en Bogotá frente a Banco Mundial × TRM (oct-2025 \
+		a may-2026): flete marítimo, puerto y flete a Bogotá; sin arancel (TLC). \
+		Clase C.
+	|
+
+Kilos por tonelada=
+	1000
+	~	kg/tonelada
+	~	Conversión de unidades.
+	|
+
+Precio internacional del maíz=
+	Tabla precio del maíz(Time)*(1+Choque del precio de las materias primas*STEP(1, Semana de inicio del choque\
+		))
+	~	USD/tonelada
+	~	Dato histórico; desde la semana del choque se le suma el choque del \
+		escenario.
+	|
+
+Tabla precio del maíz(
+	[(0,0)-(470,400)],(2,166.7),(6.43,169.5),(10.43,166.2),(14.86,161.5),(19.14,171.1),(\
+		23.57,195.1),(27.86,189.4),(32.29,163.6),(36.71,157.3),(41,167.1),(45.43,166.3),(49.71\
+		,167),(54.14,171.8),(58.57,168.7),(62.71,162.4),(67.14,146.9),(71.43,143.9),(75.86,\
+		148),(80.14,152.6),(84.57,149.3),(89,166.1),(93.29,186.7),(97.71,190.4),(102,198.8)\
+		,(106.43,234.5),(110.86,245.2),(114.86,245.2),(119.29,268.2),(123.57,305.3),(128,292.6\
+		),(132.29,278.4),(136.71,256.6),(141.14,235.6),(145.43,239.6),(149.86,248.7),(154.14\
+		,264.5),(158.57,276.6),(163,292.6),(167,335.5),(171.43,348.2),(175.71,344.8),(180.14\
+		,335.7),(184.43,323),(188.86,289.8),(193.29,312.7),(197.57,343.6),(202,320.9),(206.29\
+		,302.2),(210.71,302.8),(215.14,298.2),(219.14,282.5),(223.57,291.1),(227.86,268.1),\
+		(232.29,266.9),(236.57,242.4),(241,207.6),(245.43,223.8),(249.71,230.7),(254.14,211.3\
+		),(258.43,206.5),(262.86,198.6),(267.29,189.1),(271.43,190.6),(275.86,191.7),(280.14\
+		,197.8),(284.57,192.5),(288.86,177.4),(293.29,170.3),(297.71,185),(302,190.3),(306.43\
+		,201.3),(310.71,202.6),(315.14,214.4),(319.57,220.9),(323.57,207.4),(328,215),(332.29\
+		,203.9),(336.71,196.1),(341,192),(345.43,185.5),(349.86,197.4),(354.14,198.1),(358.57\
+		,202),(362.86,205.7),(367.29,204.5),(371.71,209.6),(375.71,212.7),(380.14,214),(384.43\
+		,216.2),(388.86,197.1),(393.14,213.4),(397.57,224),(402,239.6),(470,239.6))
+	~	USD/tonelada
+	~	Banco Mundial, Pink Sheet, maíz amarillo EE. UU. (mensual). Desde \
+		oct-2026: constante.
+	|
+
+Precio internacional de la torta de soya=
+	Tabla precio de la torta de soya(Time)*(1+Choque del precio de las materias primas*STEP\
+		(1, Semana de inicio del choque))
+	~	USD/tonelada
+	~		|
+
+Tabla precio de la torta de soya(
+	[(0,0)-(470,700)],(2,362),(6.43,353),(10.43,345),(14.86,342),(19.14,339),(23.57,363)\
+		,(27.86,349),(32.29,337),(36.71,333),(41,342),(45.43,347),(49.71,353),(54.14,356),(\
+		58.57,354),(62.71,377),(67.14,364),(71.43,339),(75.86,345),(80.14,355),(84.57,375),\
+		(89,408),(93.29,466),(97.71,496),(102,495),(106.43,562),(110.86,548),(114.86,484),(\
+		119.29,464),(123.57,482),(128,467),(132.29,470),(136.71,470),(141.14,468),(145.43,451\
+		),(149.86,443),(154.14,462),(158.57,526),(163,569),(167,601),(171.43,579),(175.71,530\
+		),(180.14,528),(184.43,536),(188.86,535),(193.29,537),(197.57,542),(202,519),(206.29\
+		,571),(210.71,605),(215.14,605),(219.14,581),(223.57,547),(227.86,519),(232.29,492)\
+		,(236.57,517),(241,515),(245.43,509),(249.71,512),(254.14,572),(258.43,524),(262.86\
+		,494),(267.29,457),(271.43,441),(275.86,429),(280.14,479),(284.57,481),(288.86,472)\
+		,(293.29,436),(297.71,436),(302,422),(306.43,385),(310.71,376),(315.14,368),(319.57\
+		,358),(323.57,369),(328,369),(332.29,358),(336.71,353),(341,335),(345.43,354),(349.86\
+		,358),(354.14,356),(358.57,411),(362.86,399),(367.29,386),(371.71,391),(375.71,404)\
+		,(380.14,416),(384.43,422),(388.86,419),(393.14,410),(397.57,406),(402,447),(470,447\
+		))
+	~	USD/tonelada
+	~	Banco Mundial, Pink Sheet, torta de soya (cambia de definición en 2021 y \
+		2025). Desde oct-2026: constante.
+	|
+
+Tasa de cambio=
+	Tabla TRM(Time)*(1+Choque de la TRM*STEP(1, Semana de inicio del choque))
+	~	COP/USD
+	~		|
+
+Tabla TRM(
+	[(0,0)-(470,5000)],(2,3165.2),(6.43,3115.8),(10.43,3128.7),(14.86,3155.8),(19.14,3304.5\
+		),(23.57,3260.5),(27.86,3206.6),(32.29,3410.7),(36.71,3399.5),(41,3433.3),(45.43,3401.5\
+		),(49.71,3378.1),(54.14,3311.2),(58.57,3411.1),(62.71,3877),(67.14,3977.4),(71.43,3858.2\
+		),(75.86,3701.6),(80.14,3657.9),(84.57,3783),(89,3750.2),(93.29,3833.8),(97.71,3685.6\
+		),(102,3466.1),(106.43,3491.3),(110.86,3554.5),(114.86,3612.8),(119.29,3650.8),(123.57\
+		,3735.7),(128,3685),(132.29,3829.4),(136.71,3881.2),(141.14,3821.5),(145.43,3773.4)\
+		,(149.86,3902.9),(154.14,3963.1),(158.57,3999.6),(163,3935.8),(167,3807.2),(171.43,\
+		3793),(175.71,4019.1),(180.14,3930.8),(184.43,4367.8),(188.86,4322.5),(193.29,4433.7\
+		),(197.57,4711.8),(202,4926.7),(206.29,4788.5),(210.71,4715.2),(215.14,4803.1),(219.14\
+		,4766.3),(223.57,4542.7),(227.86,4540.1),(232.29,4209.3),(236.57,4069.2),(241,4070.7\
+		),(245.43,4004.5),(249.71,4222.4),(254.14,4038.8),(258.43,3948.2),(262.86,3915.2),(\
+		267.29,3931.4),(271.43,3899.3),(275.86,3868),(280.14,3869.1),(284.57,4042.8),(288.86\
+		,4036.9),(293.29,4065.5),(297.71,4182.5),(302,4249.5),(306.43,4408.7),(310.71,4385.1\
+		),(315.14,4307.6),(319.57,4128),(323.57,4137.7),(328,4280.3),(332.29,4203.4),(336.71\
+		,4113.5),(341,4040.8),(345.43,4047.4),(349.86,3922.2),(354.14,3877.8),(358.57,3786.2\
+		),(362.86,3791.5),(367.29,3703),(371.71,3675.6),(375.71,3717.6),(380.14,3617.5),(384.43\
+		,3714),(388.86,3501),(393.14,3269),(397.57,3130.9),(402,3179.8),(470,3179.8))
+	~	COP/USD
+	~	TRM promedio mensual (Superfinanciera/BanRep). Desde oct-2026: supuesto \
+		constante en el valor de sep-2026.
+	|
+
+Otros costos por huevo=
+	Otros costos por huevo en 2019*(Participación de la mano de obra en otros costos*Índice del salario mínimo\
+		+(1-Participación de la mano de obra en otros costos)*Índice de precios)
+	~	COP/huevo
+	~	Mano de obra (sigue al salario mínimo) y demás costos (siguen al IPC).
+	|
+
+Costo del alimento por huevo en 2019=
+	INITIAL(Costo del alimento por huevo)
+	~	COP/huevo
+	~	Costo del alimento en la semana 0 (2019), congelado. Va en variable aparte \
+		porque Vensim exige que INITIAL sea toda la expresión de la derecha del \
+		signo igual.
+	|
+
+Otros costos por huevo en 2019=
+	Costo del alimento por huevo en 2019*(1-Participación inicial del alimento en el costo\
+		)/Participación inicial del alimento en el costo
+	~	COP/huevo
+	~	Se calcula para que el alimento pese 70 % del costo en 2019.
+	|
+
+Participación inicial del alimento en el costo=
+	0.7
+	~	Dmnl
+	~	67,8 % en 2019 (metodología anterior de Fenavi) y 69,7 % en junio de 2026 \
+		(Fenaviquín 456, p. 17). Clase F.
+	|
+
+Participación de la mano de obra en otros costos=
+	0.283
+	~	Dmnl
+	~	Salto de enero de 2026 en Fenaviquín 456: otros costos +7,4 % con salario \
+		mínimo +23,0 % e IPC +1,2 %. Una sola observación. Clase C.
+	|
+
+Índice del salario mínimo=
+	Tabla salario mínimo(Time)/Tabla salario mínimo(INITIAL TIME)
+	~	Dmnl
+	~		|
+
+Tabla salario mínimo(
+	[(0,0)-(470,2.5e+06)],(0,828116),(52,828116),(52.15,877803),(104.29,877803),(104.44,\
+		908526),(156.43,908526),(156.58,1e+06),(208.57,1e+06),(208.72,1.16e+06),(260.71,1.16e+06\
+		),(260.87,1.3e+06),(313,1.3e+06),(313.15,1.4235e+06),(365.14,1.4235e+06),(365.3,1.7509e+06\
+		),(417.29,1.7509e+06),(417.44,1.87347e+06),(469.43,1.87347e+06))
+	~	COP/mes
+	~	Salario mínimo mensual (decretos anuales), escalón el 1 de enero. 2027: \
+		supuesto +7%.
+	|
+
+Productores activos=
+	INTEG(Entrada de productores-Salida de productores, Productores iniciales)
+	~	productores
+	~		|
+
+Entrada de productores=
+	Tasa de contagio*Productores activos*(Productores potenciales/Productores posibles)*\
+		Efecto del margen en la entrada(Brecha de margen)
+	~	productores/Week
+	~	Imitación tipo rumor (R1) con saturación (B5); solo con margen por \
+		encima del normal.
+	|
+
+Salida de productores=
+	Productores activos*Fracción de salida(Caja relativa)/Tiempo de salida
+	~	productores/Week
+	~	Bucle B7.
+	|
+
+Productores potenciales=
+	MAX(0, Productores posibles-Productores activos)
+	~	productores
+	~		|
+
+Productores iniciales=
+	2323
+	~	productores
+	~	Censo ICA 2019: predios de postura (un predio no es lo mismo que un \
+		productor). Clase D.
+	|
+
+Productores posibles=
+	6000
+	~	productores
+	~	Sin fuente. Clase K: por calibrar.
+	|
+
+Tasa de contagio=
+	0.08
+	~	1/Week
+	~	Clase K: por calibrar con los predios del ICA (2.323 en 2019, 2.558 en \
+		2025) y los productores nuevos de 2024-2025 (Fenaviquín 440).
+	|
+
+Tiempo de salida=
+	52
+	~	Week
+	~	La fracción de salida se reparte en un año. Sin fuente. Clase S.
+	|
+
+Gallinas por productor nuevo=
+	4230
+	~	aves/productores
+	~	Fenaviquín 440, p. 5: 1.614 NIT sin registro previo encasetaron 6.826.143 \
+		pollitas en 2024-2025 (unas 4.230 cada uno). Clase F.
+	|
+
+Efecto del margen en la entrada(
+	[(-1,0)-(1,1.2)],(-1,0),(0,0),(0.1,0.3),(0.25,0.7),(0.5,1),(1,1))
+	~	Dmnl
+	~	Cero con el margen normal o menor: nadie entra si no hay bonanza. Clase K.
+	|
+
+Fracción de salida(
+	[(-2,0)-(3,0.5)],(-2,0.4),(-1,0.3),(0,0.15),(0.5,0.05),(1,0),(3,0))
+	~	Dmnl
+	~	Cero con la caja normal; sube cuando la caja se agota. Clase K.
+	|
+
+Capacidad de galpones=
+	INTEG(Galpones terminados-Retiro de galpones, Capacidad inicial de galpones)
+	~	aves
+	~	Cupos para gallinas en postura. Se compara con la capacidad instalada del \
+		ICA (80,4 millones en 2025).
+	|
+
+Construcción de galpones=
+	Entrada de productores*Capacidad por productor nuevo+Ampliación de galpones
+	~	aves/Week
+	~	Galpones de los que entran más las ampliaciones de los productores \
+		establecidos.
+	|
+
+Ampliación de galpones=
+	MAX(0, Gallinas deseadas-Capacidad de galpones)/Tiempo para decidir ampliaciones
+	~	aves/Week
+	~	Se amplía cuando las gallinas deseadas no caben. No se mira lo que ya \
+		está en construcción: por eso se sobreconstruye.
+	|
+
+Tiempo para decidir ampliaciones=
+	15
+	~	Week
+	~	Clase K: por calibrar con la capacidad del ICA 2019-2025.
+	|
+
+Galpones terminados=
+	DELAY3(Construcción de galpones, Tiempo de construcción)
+	~	aves/Week
+	~		|
+
+Retiro de galpones=
+	Salida de productores*(Capacidad de galpones/Productores activos)*Fracción de galpones que se desmontan
+	~	aves/Week
+	~	Los galpones casi no se retiran: la mayoría se vende o se queda vacía.
+	|
+
+Capacidad inicial de galpones=
+	Gallinas iniciales*(1+Holgura inicial de capacidad)
+	~	aves
+	~		|
+
+Holgura inicial de capacidad=
+	0.144
+	~	Dmnl
+	~	Censo ICA 2019: 69.577.275 cupos instalados / 60.814.199 ocupados - 1. \
+		Clase D.
+	|
+
+Capacidad por productor nuevo=
+	4840
+	~	aves/productores
+	~	4.230 × 1,144: el productor nuevo construye con la holgura del promedio \
+		nacional. Clase C.
+	|
+
+Tiempo de construcción=
+	26
+	~	Week
+	~	Sin fuente pública. Sensibilidad de 13 a 52 semanas. Clase S.
+	|
+
+Fracción de galpones que se desmontan=
+	0.2
+	~	Dmnl
+	~	Clase K: por calibrar con la capacidad del ICA.
+	|
+
+Capacidad ociosa=
+	MAX(0, Capacidad de galpones-Gallinas en postura)
+	~	aves
+	~		|
+
+Presión por ocupar galpones=
+	Capacidad ociosa/Tiempo para ocupar galpones*Efecto del margen bajo en la ocupación\
+		(Brecha de margen)
+	~	aves/Week
+	~	Costo hundido (R2): con margen algo bajo se llenan los galpones vacíos; \
+		se apaga si el precio no cubre ni el alimento.
+	|
+
+Tiempo para ocupar galpones=
+	20
+	~	Week
+	~	Clase K: por calibrar con la ocupación del ICA (82,2 % a 89,4 %).
+	|
+
+Efecto del margen bajo en la ocupación(
+	[(-1,0)-(1,1.2)],(-1,0),(-0.4,0),(-0.3,0.5),(-0.15,1),(-0.05,0.6),(0,0),(1,0))
+	~	Dmnl
+	~	Cero con el margen normal; máximo con un margen algo bajo; cero de nuevo \
+		cuando el precio no cubre el alimento. Clase K: por calibrar.
+	|
+
+Caja del productor=
+	INTEG(Utilidad del productor-Retiro de utilidades, Utilidad del productor*Tiempo de retiro de utilidades\
+		)
+	~	COP/productores
+	~	Caja de una granja típica. Arranca en su valor de equilibrio.
+	|
+
+Utilidad del productor=
+	(Precio en granja-Costo unitario)*Producción por productor
+	~	COP/(productores*Week)
+	~		|
+
+Retiro de utilidades=
+	MAX(0, Caja del productor)/Tiempo de retiro de utilidades
+	~	COP/(productores*Week)
+	~	El dueño saca la caja positiva poco a poco; con caja negativa no saca \
+		nada.
+	|
+
+Producción por productor=
+	Producción de huevos/Productores activos
+	~	huevos/(productores*Week)
+	~		|
+
+Tiempo de retiro de utilidades=
+	26
+	~	Week
+	~	Sin fuente. Clase S.
+	|
+
+Caja de referencia=
+	INITIAL(Caja del productor)
+	~	COP/productores
+	~		|
+
+Caja relativa=
+	Caja del productor/Caja de referencia
+	~	Dmnl
+	~	1 = caja normal; 0 = sin caja; negativa = deudas.
+	|
+
+Presión para tomar medidas=
+	Interruptor de la cuota*IF THEN ELSE(Caja relativa<Umbral de caja, 1, 0)
+	~	Dmnl
+	~	Bucle B8. Se activa cuando la caja cae por debajo del umbral.
+	|
+
+Interruptor de la cuota=
+	0
+	~	Dmnl
+	~	0 = sin cuota; 1 = escenario de cuota. Clase P.
+	|
+
+Umbral de caja=
+	0.3
+	~	Dmnl
+	~	Fracción de la caja normal que activa la medida. Clase P.
+	|
+
+Cuota de encasetamiento=
+	1.078e+06
+	~	aves/Week
+	~	Encasetamiento que repone la producción de 2025: 372,1 millones de huevos \
+		por semana / 345,2 huevos por pollita (4,69 millones al mes). Clase C.
+	|
+
+Compras del fondo de estabilización=
+	Interruptor del fondo*Compra máxima del fondo*MAX(0, Costo unitario-Precio observado por el fondo\
+		)/Costo unitario
+	~	huevos/Week
+	~	Bucle B9. Compra excedentes cuando el precio en granja cae por debajo del \
+		costo.
+	|
+
+Precio observado por el fondo=
+	SMOOTHI(Precio en granja, Tiempo de reacción del fondo, Precio de referencia*Participación del productor en el precio\
+		)
+	~	COP/huevo
+	~	La demora evita una ecuación simultánea; el valor inicial fijo evita un \
+		ciclo en la inicialización.
+	|
+
+Interruptor del fondo=
+	0
+	~	Dmnl
+	~	0 = sin fondo; 1 = escenario de fondo. Clase P.
+	|
+
+Compra máxima del fondo=
+	5e+07
+	~	huevos/Week
+	~	Unos 13 % de la producción de 2025. Clase P.
+	|
+
+Tiempo de reacción del fondo=
+	2
+	~	Week
+	~	Clase P.
+	|
+
+Semanas con margen negativo=
+	INTEG(Semana con margen negativo, 0)
+	~	Week
+	~		|
+
+Semana con margen negativo=
+	IF THEN ELSE(Margen esperado<0, 1, 0)
+	~	Dmnl
+	~	Suma 1 por cada semana en que el margen esperado es negativo.
+	|
+
+Productores que salieron=
+	INTEG(Registro de salidas, 0)
+	~	productores
+	~		|
+
+Registro de salidas=
+	Salida de productores
+	~	productores/Week
+	~	Copia la salida de productores para acumularla.
+	|
+
+Suma del precio=
+	INTEG(Acumulación del precio, 0)
+	~	COP*Week/huevo
+	~		|
+
+Acumulación del precio=
+	Precio de mercado
+	~	COP/huevo
+	~	Acumula el precio para calcular el precio medio.
+	|
+
+Suma del precio al cuadrado=
+	INTEG(Acumulación del precio al cuadrado, 0)
+	~	COP*COP*Week/(huevo*huevo)
+	~		|
+
+Acumulación del precio al cuadrado=
+	Precio de mercado*Precio de mercado
+	~	COP*COP/(huevo*huevo)
+	~	Acumula el cuadrado del precio para calcular la desviación estándar.
+	|
+
+Tiempo transcurrido=
+	MAX(Time-INITIAL TIME, TIME STEP)
+	~	Week
+	~		|
+
+Precio medio=
+	Suma del precio/Tiempo transcurrido
+	~	COP/huevo
+	~		|
+
+Desviación estándar del precio=
+	SQRT(MAX(0, Suma del precio al cuadrado/Tiempo transcurrido-Precio medio*Precio medio\
+		))
+	~	COP/huevo
+	~		|
+
+Coeficiente de variación del precio=
+	ZIDZ(Desviación estándar del precio, Precio medio)
+	~	Dmnl
+	~	Indicador principal para comparar políticas.
+	|
+
+Encasetamiento observado=
+	Tabla encasetamiento observado(Time)
+	~	aves/Week
+	~	Para graficar junto al simulado.
+	|
+
+Tabla encasetamiento observado(
+	[(0,0)-(470,1.5e+06)],(2,821279),(6.43,951381),(10.43,904681),(14.86,904382),(19.14,\
+		914922),(23.57,826947),(27.86,931180),(32.29,984198),(36.71,973855),(41,990675),(45.43\
+		,852214),(49.71,919716),(54.14,957518),(58.57,919489),(62.71,966530),(67.14,833749)\
+		,(71.43,916713),(75.86,998777),(80.14,969350),(84.57,956380),(89,909954),(93.29,1.04076e+06\
+		),(97.71,1.03519e+06),(102,956181),(106.43,931594),(110.86,833997),(114.86,1.02897e+06\
+		),(119.29,992253),(123.57,771615),(128,722453),(132.29,908357),(136.71,1.02347e+06)\
+		,(141.14,823540),(145.43,752013),(149.86,933345),(154.14,692295),(158.57,920525),(163\
+		,1.02373e+06),(167,1.04038e+06),(171.43,915545),(175.71,984021),(180.14,953796),(184.43\
+		,871745),(188.86,937093),(193.29,923933),(197.57,985478),(202,990535),(206.29,896276\
+		),(210.71,774950),(215.14,958013),(219.14,1.13324e+06),(223.57,962554),(227.86,1.00642e+06\
+		),(232.29,1.0882e+06),(236.57,965870),(241,911689),(245.43,955875),(249.71,1.03717e+06\
+		),(254.14,1.07377e+06),(258.43,964930),(262.86,1.01106e+06),(267.29,1.13794e+06),(271.43\
+		,1.03764e+06),(275.86,1.20519e+06),(280.14,1.08532e+06),(284.57,940607),(288.86,1.08974e+06\
+		),(293.29,987933),(297.71,1.13226e+06),(302,1.09628e+06),(306.43,1.16362e+06),(310.71\
+		,1.04132e+06),(315.14,1.14934e+06),(319.57,1.10252e+06),(323.57,1.11619e+06),(328,1.10814e+06\
+		),(332.29,1.15549e+06),(336.71,1.13747e+06),(341,1.19144e+06),(345.43,1.03941e+06),\
+		(349.86,1.21467e+06),(354.14,1.12758e+06),(358.57,1.07249e+06),(362.86,994943),(367.29\
+		,927712),(371.71,1.00606e+06),(375.71,926549),(380.14,1.09124e+06),(384.43,1.06956e+06\
+		),(388.86,1.14641e+06),(393.14,869376),(397.57,807324),(402,873937))
+	~	aves/Week
+	~	Fenavi-Fonav (encasetamiento mensual de pollitas, todos los colores) \
+		llevado a tasa semanal: total del mes / días del mes × 7.
+	|
+
+Producción observada=
+	Tabla producción observada(Time)
+	~	huevos/Week
+	~		|
+
+Precio de mercado observado=
+	Tabla precio observado(Time)
+	~	COP/huevo
+	~	DANE-SIPSA, referencia rojo AA, promedio de 19 mercados, pesos corrientes. \
+		Para graficar junto al precio de mercado.
+	|
+
+Costo Fenavi observado=
+	Tabla costo Fenavi(Time)
+	~	COP/huevo
+	~	Costo de producción de Fenavi sin amortización del ave. Para graficar \
+		junto al costo unitario.
+	|
+
+Tabla producción observada(
+	[(0,0)-(470,5e+08)],(2,2.66776e+08),(6.43,2.65166e+08),(10.43,2.68386e+08),(14.86,2.71146e+08\
+		),(19.14,2.72296e+08),(23.57,2.73446e+08),(27.86,2.74366e+08),(32.29,2.77585e+08),(\
+		36.71,2.80805e+08),(41,2.84025e+08),(45.43,2.85175e+08),(49.71,2.88624e+08),(54.14,\
+		2.97823e+08),(58.57,3.02423e+08),(62.71,3.07253e+08),(67.14,3.11392e+08),(71.43,3.15302e+08\
+		),(75.86,3.17372e+08),(80.14,3.15302e+08),(84.57,3.18292e+08),(89,3.18292e+08),(93.29\
+		,3.19671e+08),(97.71,3.21051e+08),(102,3.23351e+08),(106.43,3.23811e+08),(110.86,3.26111e+08\
+		),(114.86,3.28641e+08),(119.29,3.29331e+08),(123.57,3.29561e+08),(128,3.27721e+08),\
+		(132.29,3.27031e+08),(136.71,3.28871e+08),(141.14,3.27951e+08),(145.43,3.25191e+08)\
+		,(149.86,3.19901e+08),(154.14,3.21971e+08),(158.57,3.23121e+08),(163,3.18982e+08),(\
+		167,3.14842e+08),(171.43,3.12082e+08),(175.71,3.08632e+08),(180.14,3.06333e+08),(184.43\
+		,3.05873e+08),(188.86,3.07483e+08),(193.29,3.07713e+08),(197.57,3.12312e+08),(202,3.10472e+08\
+		),(206.29,3.09552e+08),(210.71,3.12772e+08),(215.14,3.16912e+08),(219.14,3.18752e+08\
+		),(223.57,3.17832e+08),(227.86,3.19211e+08),(232.29,3.19441e+08),(236.57,3.19901e+08\
+		),(241,3.27951e+08),(245.43,3.28871e+08),(249.71,3.3117e+08),(254.14,3.3186e+08),(258.43\
+		,3.3347e+08),(262.86,3.3209e+08),(267.29,3.3278e+08),(271.43,3.3623e+08),(275.86,3.383e+08\
+		),(280.14,3.4014e+08),(284.57,3.4152e+08),(288.86,3.44049e+08),(293.29,3.47959e+08)\
+		,(297.71,3.56008e+08),(302,3.59688e+08),(306.43,3.56238e+08),(310.71,3.58998e+08),(\
+		315.14,3.59228e+08),(319.57,3.60608e+08),(323.57,3.63828e+08),(328,3.67967e+08),(332.29\
+		,3.70957e+08),(336.71,3.72797e+08),(341,3.72567e+08),(345.43,3.75326e+08),(349.86,3.77166e+08\
+		),(354.14,3.79006e+08),(358.57,3.81076e+08),(362.86,3.81306e+08),(367.29,3.8317e+08\
+		),(371.71,3.85323e+08),(375.71,3.8883e+08),(380.14,3.87378e+08),(384.43,3.84833e+08\
+		),(388.86,3.79852e+08),(393.14,3.76521e+08),(397.57,3.70926e+08),(402,3.72438e+08))
+	~	huevos/Week
+	~	Fenavi (tasa mensual estandarizada) × 12/365,25 × 7. Ene-sep 2026 \
+		estimado con k = 24,66 huevos por pollita al mes (ver la base).
+	|
+
+Tabla precio observado(
+	[(0,0)-(470,700)],(2,283.2),(6.43,283.7),(10.43,294.4),(14.86,301.3),(19.14,313.1),(\
+		23.57,313.9),(27.86,310.4),(32.29,307.1),(36.71,305.4),(41,299.4),(45.43,298.4),(49.71\
+		,298.7),(54.14,292.9),(58.57,286.6),(62.71,301.2),(67.14,362.1),(71.43,334.9),(75.86\
+		,293.6),(80.14,268.4),(84.57,253.8),(89,266.9),(93.29,283.1),(97.71,311.7),(102,333.4\
+		),(106.43,322.5),(110.86,312.9),(114.86,319.2),(119.29,332.1),(123.57,397.6),(128,436.9\
+		),(132.29,445.1),(136.71,382.1),(141.14,334.8),(145.43,338.1),(149.86,377),(154.14,\
+		412.1),(158.57,423.7),(163,437.8),(167,471.5),(171.43,491.1),(175.71,487.3),(180.14\
+		,481.8),(184.43,487.7),(188.86,504.7),(193.29,525.7),(197.57,539.4),(202,549.6),(206.29\
+		,549.9),(210.71,540.4),(215.14,527.7),(219.14,541.2),(223.57,544.6),(227.86,543.8),\
+		(232.29,537),(236.57,538.1),(241,545.9),(245.43,562.5),(249.71,575.5),(254.14,573.7\
+		),(258.43,565.9),(262.86,512.6),(267.29,483.4),(271.43,492.2),(275.86,491.1),(280.14\
+		,499.9),(284.57,502.9),(288.86,494.6),(293.29,483.1),(297.71,486.8),(302,480.9),(306.43\
+		,477.3),(310.71,471.1),(315.14,457.8),(319.57,456.8),(323.57,464.2),(328,473.7),(332.29\
+		,482.9),(336.71,486.5),(341,479.8),(345.43,472.2),(349.86,461.5),(354.14,452.4),(358.57\
+		,450.7),(362.86,440.1),(367.29,419.6),(371.71,428.8),(375.71,445.3),(380.14,480.4),\
+		(384.43,482.1),(388.86,473),(393.14,461.4),(397.57,461.3),(402,487.3))
+	~	COP/huevo
+	~	DANE-SIPSA, precio mayorista del huevo (referencia rojo AA), promedio \
+		simple de 19 mercados con dato completo. Nominal.
+	|
+
+Tabla costo Fenavi(
+	[(0,0)-(470,500)],(2,183.4),(6.43,183.4),(10.43,183.4),(14.86,192.9),(19.14,193.8),(\
+		23.57,202.8),(27.86,211.8),(32.29,208.4),(36.71,205),(41,212),(45.43,209),(49.71,208\
+		),(54.14,213),(58.57,218),(62.71,223),(67.14,243),(71.43,234),(75.86,233),(80.14,226\
+		),(84.57,229.9),(89,233.9),(93.29,237),(97.71,263.7),(102,264),(106.43,264.4),(110.86\
+		,272.8),(114.86,281.2),(119.29,286.9),(123.57,289.5),(128,301),(132.29,310.7),(136.71\
+		,308.6),(141.14,306.5),(145.43,298.8),(149.86,291),(154.14,299),(158.57,307),(163,315\
+		),(167,327.5),(171.43,339.6),(175.71,349.1),(180.14,354.7),(184.43,352.5),(188.86,364.1\
+		),(193.29,409.2),(197.57,399.9),(202,405.9),(206.29,418.7),(210.71,419.3),(215.14,419.2\
+		),(219.14,421.8),(223.57,415.1),(227.86,413.9),(232.29,400.9),(236.57,390.8),(241,366.4\
+		),(245.43,357.4),(249.71,343.2),(254.14,341.6),(258.43,352.9),(262.86,350.8),(267.29\
+		,353.6),(271.43,342),(275.86,334.2),(280.14,330.8),(284.57,328.8),(288.86,337.9),(293.29\
+		,342.3),(297.71,337.1),(302,325.7),(306.43,337),(310.71,336.3),(315.14,338.1),(319.57\
+		,336.9),(323.57,340.8),(328,339.2),(332.29,335.3),(336.71,344.1),(341,335.3),(345.43\
+		,326.8),(349.86,324.4),(354.14,322),(358.57,320.3),(362.86,321.6),(367.29,315.6),(371.71\
+		,312.4),(375.71,313.4),(380.14,316.6),(384.43,317.5),(388.86,319.2),(393.14,334.7),\
+		(397.57,318.5),(402,318.2),(406.29,311.6),(410.71,324.7),(415,338.4),(419.43,339.6)\
+		,(470,339.6))
+	~	COP/huevo
+	~	Fenavi-Fonav, Fenaviquín, costo de producción del huevo sin \
+		amortización del ave (serie mensual armada el 5-nov-2026). Oct-2026 a \
+		ene-2027: proyección de Fenavi (ed. 456, p. 17); después, constante.
+	|
+
+********************************************************
+	.Control
+********************************************************~
+		Simulation Control Parameters
+	|
+
+FINAL TIME=
+	470
+	~	Week
+	~	Fin de 2027 (semana 0 = 1 de enero de 2019).
+	|
+
+INITIAL TIME=
+	0
+	~	Week
+	~	Primera semana de 2019.
+	|
+
+SAVEPER=
+	1
+	~	Week [0,?]
+	~	Se guarda un dato por semana.
+	|
+
+TIME STEP=
+	0.25
+	~	Week [0,?]
+	~	Menor que un tercio de la constante de tiempo más corta (2 semanas).
+	|
+
+\\\---/// Sketch information - do not modify anything except names
+V300  Do not put anything below this section - it will be ignored
+*View 1
+$-1--1--1,0,|12||-1--1--1|-1--1--1|-1--1--1|-1--1--1|-1--1--1|96,96,64,2
+10,1,Pollitas en levante,712,460,46,26,3,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,2,Gallinas en postura temprana,1064,453,56,26,3,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,3,5,1,100,0,0,22,0,192,0,-1--1--1,,1|(820,456)|
+1,4,5,2,4,0,0,22,0,192,0,-1--1--1,,1|(951,456)|
+11,5,0,888,456,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,6,Maduración,888,490,47,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+12,7,48,2058,453,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,8,10,2,100,0,0,22,0,192,0,-1--1--1,,1|(1175,453)|
+1,9,10,413,4,0,0,22,0,192,0,-1--1--1,,1|(1297,453)|
+11,10,0,1235,453,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,11,Paso a postura media,1235,487,46,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+12,12,48,1064,652,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,13,15,2,100,0,0,22,0,192,0,-1--1--1,,1|(1064,525)|
+1,14,15,12,4,0,0,22,0,192,0,-1--1--1,,1|(1064,613)|
+11,15,0,1064,577,8,6,33,3,0,0,4,0,0,0,0,0,0,0,0,0
+10,16,Sacrificio en postura temprana,1156,577,69,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,17,Tiempo de levante,773,354,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,18,17,6,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,19,17,1,0,0,0,0,0,192,1,-1--1--1,,1|(0,0)|
+10,20,Encasetamiento inicial,526,353,60,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,21,20,6,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,22,20,1,0,0,0,0,0,192,1,-1--1--1,,1|(0,0)|
+12,23,48,286,457,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,24,26,23,100,0,0,22,0,192,0,-1--1--1,,1|(386,457)|
+1,25,26,1,4,0,0,22,0,192,0,-1--1--1,,1|(577,457)|
+11,26,0,481,457,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,27,Encasetamiento,481,491,60,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,28,27,6,1,0,0,0,0,192,0,-1--1--1,,1|(683,570)|
+10,29,Gallinas iniciales,1066,283,63,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,30,29,2,0,0,0,0,0,192,1,-1--1--1,,1|(0,0)|
+1,31,2,11,1,0,0,0,0,192,0,-1--1--1,,1|(1142,503)|
+10,32,Producción de huevos,1408,177,54,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,33,Vida productiva,1578,172,59,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,34,Postura semanal por ave,1233,112,62,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,35,34,32,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,36,34,29,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,37,Producción inicial de huevos,1086,45,66,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,38,37,29,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,39,Vida productiva normal,1468,62,59,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,40,Efecto del margen en la vida productiva,1698,62,78,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,41,2,16,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,42,Tasa de sacrificio por brote,1235,762,62,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,43,Interruptor del brote,978,862,56,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,44,Semana de inicio del brote,1128,907,64,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,45,Duración del brote,1318,907,49,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,46,Fracción sacrificada por el brote,1498,862,73,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,47,43,42,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,48,44,42,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,49,45,42,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,50,46,42,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,51,42,16,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,52,Fracción de mortalidad,1878,212,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,53,40,33,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,54,39,33,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,55,Gallinas deseadas,668,-77,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,56,Gallinas para atender la demanda,651,-259,75,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,57,56,55,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,58,Postura semanal por ave,846,-263,66,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,59,58,56,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,60,Demanda esperada,600,-419,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,61,60,56,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,62,Tiempo para percibir la demanda,956,-427,77,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,63,62,60,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,64,Ajuste del stock de gallinas,588,112,59,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,65,55,64,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,66,Encasetamiento indicado,260,105,60,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,67,64,66,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,68,Reposición esperada,-257,189,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,69,68,66,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,70,Tiempo de reposición,-213,33,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,71,70,68,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,72,Ajuste de la línea de suministro,-193,421,64,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,73,72,66,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,74,Tiempo de ajuste de gallinas,171,265,64,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,75,74,64,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,76,74,72,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,77,Fracción de la línea de suministro considerada,-24,630,71,36,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,78,77,72,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,79,Pollitas en levante,-423,519,45,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,80,79,72,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,81,Pollitas deseadas en levante,-452,371,61,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,82,68,81,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,83,81,72,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,84,Tiempo de levante,-681,370,46,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,85,Gallinas iniciales,-560,226,38,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,86,Vida productiva normal,-492,129,63,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,87,Gallinas en postura,-396,61,48,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,88,85,68,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,89,86,68,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,90,87,68,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,91,Demanda de referencia,940,-604,49,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,92,91,60,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,93,Consumo per cápita de referencia,925,-842,74,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,94,93,91,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,95,Tabla consumo per cápita de referencia,873,-1078,74,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,96,95,93,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,97,Time,565,-1048,31,16,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,98,Población,251,-957,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,99,97,98,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,100,97,93,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,101,98,91,1,0,0,0,0,192,0,-1--1--1,,1|(885,-617)|
+10,102,Tabla población,221,-1147,60,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,103,102,98,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,104,Consumo aparente por persona,-46,-951,70,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,105,98,104,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,106,Oferta en el mercado,-401,-688,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,107,106,104,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,108,Precio de mercado,314,-673,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,109,106,108,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,110,91,108,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,111,Semanas por año,210,-804,65,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,112,111,104,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,113,111,91,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,114,84,81,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,115,Producción de huevos,-667,-792,58,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,116,Oferta mínima,-698,-471,55,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,117,116,106,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,118,115,106,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,119,Precio en granja,-77,-502,61,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,120,108,119,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,121,Precio de referencia,-321,-578,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,122,121,108,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,123,Elasticidad precio de la demanda,415,-500,66,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,124,123,108,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,125,Participación del productor en el precio,-319,-387,62,36,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,126,125,119,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,127,Precio percibido,109,-417,61,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,128,Margen esperado,317,-306,66,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,129,Margen normal,494,-176,58,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,130,Brecha de margen,375,-81,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,131,119,127,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,132,127,128,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,133,128,129,0,0,0,0,0,192,1,-1--1--1,,1|(0,0)|
+1,134,129,130,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,135,128,130,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,136,Tiempo de percepción del precio,-81,-327,62,36,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,137,136,127,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,138,Índice de precios,1487,-775,64,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,139,138,108,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,140,Tabla precio del maíz,1546,-2228,60,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,141,Tabla precio de la torta de soya,1894,-2219,61,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,142,Precio internacional de la torta de soya,1956,-2061,73,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,143,Precio internacional del maíz,1461,-2092,73,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,144,Choque del precio de las materias primas,1691,-2039,78,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,145,140,143,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,146,141,142,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,147,144,143,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,148,144,142,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,149,Costo de maíz y soya por kilo de alimento,1982,-1698,76,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,150,142,149,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,151,143,149,1,0,0,0,0,192,0,-1--1--1,,1|(1642,-1860)|
+10,152,Tasa de cambio,2371,-2062,59,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,153,152,149,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,154,Tabla TRM,2334,-2224,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,155,Choque de la TRM,2611,-2050,51,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,156,155,152,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,157,154,152,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,158,Time,1696,-2182,31,16,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,159,158,143,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,160,158,142,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,161,158,152,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,162,Semana de inicio del choque,1728,-1929,64,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,163,162,142,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,164,162,143,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,165,162,152,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,166,Costo del alimento balanceado,1959,-1429,69,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,167,Sobrecosto de importación,2358,-1827,54,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,168,Kilos por tonelada,2397,-1683,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,169,Participación del maíz en el alimento,1524,-1736,72,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,170,Participación de la soya en el alimento,1539,-1597,71,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,171,169,149,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,172,170,149,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,173,167,149,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,174,168,149,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,175,Costo del alimento por huevo,1923,-1151,69,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,176,166,175,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,177,Factor de fabricación del alimento,1525,-1416,77,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,178,Alimento por huevo,1483,-1177,50,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,179,177,166,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,180,178,175,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,181,Costo unitario,1892,-921,53,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,182,175,181,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,183,Otros costos por huevo en 2019,2323,-1149,61,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,184,Participación inicial del alimento en el costo,2574,-1261,72,36,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,185,184,183,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,186,Otros costos por huevo,2339,-930,61,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,187,183,186,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,188,186,181,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,189,138,186,1,0,0,0,0,192,0,-1--1--1,,1|(1937,-804)|
+10,190,Participación de la mano de obra en otros costos,2670,-1078,68,36,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,191,190,186,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,192,Índice del salario mínimo,2668,-835,64,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,193,192,186,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,194,Tabla salario mínimo,2919,-939,49,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,195,Time,2918,-821,31,16,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,196,INITIAL TIME,2914,-754,56,16,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,197,195,192,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,198,196,192,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,199,194,192,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,200,Tabla IPC,1435,-925,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,201,200,138,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,202,Costo unitario,114,-212,61,16,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,203,202,128,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,204,Capacidad de galpones,-125,1042,52,26,3,3,0,0,-1,0,0,0,0,0,0,0,0,0
+12,205,48,-662,1035,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,206,208,205,100,0,0,22,0,192,0,-1--1--1,,1|(-536,1035)|
+1,207,208,204,4,0,0,22,0,192,0,-1--1--1,,1|(-293,1035)|
+11,208,0,-415,1035,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,209,Galpones terminados,-415,1069,46,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,210,Tiempo de construcción,-471,875,49,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,211,Capacidad inicial de galpones,-119,864,64,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,212,Holgura inicial de capacidad,-299,757,65,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,213,210,209,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,214,212,211,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,215,211,204,0,0,0,0,0,192,1,-1--1--1,,1|(0,0)|
+10,216,Gallinas iniciales,85,876,38,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,217,216,211,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,218,Ampliación de galpones,-211,1251,54,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,219,Construcción de galpones,-549,1233,61,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,220,Capacidad por productor nuevo,-938,1180,62,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,221,Productores activos,-131,1542,47,26,3,3,0,0,-1,0,0,0,0,0,0,0,0,0
+12,222,48,-630,1537,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,223,225,222,100,0,0,22,0,192,0,-1--1--1,,1|(-514,1537)|
+1,224,225,221,4,0,0,22,0,192,0,-1--1--1,,1|(-287,1537)|
+11,225,0,-402,1537,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,226,Entrada de productores,-402,1571,47,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,227,226,219,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,228,218,219,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,229,220,219,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,230,219,209,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,231,204,218,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+12,232,48,323,1042,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,233,235,204,100,0,0,22,0,192,0,-1--1--1,,1|(21,1042)|
+1,234,235,232,4,0,0,22,0,192,0,-1--1--1,,1|(220,1042)|
+11,235,0,120,1042,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,236,Retiro de galpones,120,1076,46,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,237,Fracción de galpones que se desmontan,338,884,77,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,238,237,236,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,239,204,236,1,0,0,0,0,192,0,-1--1--1,,1|(26,957)|
+10,240,Capacidad ociosa,32,1251,65,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,241,Tiempo para ocupar galpones,447,1126,62,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,242,Efecto del margen bajo en la ocupación,731,1169,76,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,243,Brecha de margen,671,1319,44,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,244,204,240,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+12,245,48,367,1542,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,246,248,221,100,0,0,22,0,192,0,-1--1--1,,1|(23,1542)|
+1,247,248,245,4,0,0,22,0,192,0,-1--1--1,,1|(250,1542)|
+11,248,0,136,1542,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,249,Salida de productores,136,1576,47,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,250,249,236,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,251,221,249,1,0,0,0,0,192,0,-1--1--1,,1|(26,1433)|
+1,252,221,236,1,0,0,0,0,192,0,-1--1--1,,1|(-71,1240)|
+10,253,Caja del productor,-152,1971,46,26,3,3,0,0,-1,0,0,0,0,0,0,0,0,0
+12,254,48,-604,1965,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,255,257,254,100,0,0,22,0,192,0,-1--1--1,,1|(-498,1965)|
+1,256,257,253,4,0,0,22,0,192,0,-1--1--1,,1|(-294,1965)|
+11,257,0,-396,1965,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,258,Utilidad del productor,-396,1999,46,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+12,259,48,413,1971,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,260,262,253,100,0,0,22,0,192,0,-1--1--1,,1|(18,1971)|
+1,261,262,259,4,0,0,22,0,192,0,-1--1--1,,1|(279,1971)|
+11,262,0,148,1971,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,263,Retiro de utilidades,148,2005,46,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,264,Caja relativa,137,1811,48,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,265,Caja de referencia,353,1807,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,266,253,264,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,267,264,249,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,268,253,265,0,0,0,0,0,192,1,-1--1--1,,1|(0,0)|
+1,269,265,264,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,270,253,263,1,0,0,0,0,192,0,-1--1--1,,1|(-11,2033)|
+10,271,Tiempo de retiro de utilidades,11,2130,62,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,272,271,263,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,273,271,253,0,0,0,0,0,192,1,-1--1--1,,1|(0,0)|
+10,274,Producción por productor,-98,1731,57,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,275,221,274,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,276,274,258,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,277,Producción de huevos,20,1626,58,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,278,277,274,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,279,Productores potenciales,-244,1696,47,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,280,Tasa de contagio,-635,1641,63,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,281,Productores posibles,-601,1738,47,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,282,Efecto del margen en la entrada,-466,1806,78,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,283,Brecha de margen,-585,1454,44,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,284,283,226,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,285,280,226,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,286,281,226,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,287,282,226,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,288,221,279,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,289,221,226,1,0,0,0,0,192,0,-1--1--1,,1|(-256,1584)|
+1,290,279,226,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,291,281,279,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,292,Precio en granja,-575,2077,41,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,293,Costo unitario,-328,2089,61,16,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,294,292,258,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,295,293,258,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,296,Brecha de margen,1778,172,44,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,297,296,33,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,298,Tabla encasetamiento observado,1263,1165,60,36,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,299,Encasetamiento observado,1242,1389,60,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,300,Tabla producción observada,1769,1168,65,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,301,Producción observada,1769,1381,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,302,Time,1484,1325,31,16,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,303,298,299,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,304,302,299,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,305,302,301,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,306,300,301,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,307,Semanas con margen negativo,2529,771,63,26,3,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,308,Productores que salieron,2535,902,62,26,3,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,309,Suma del precio,2532,1024,61,26,3,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,310,Suma del precio al cuadrado,2530,1131,61,26,3,3,0,0,-1,0,0,0,0,0,0,0,0,0
+12,311,48,2070,766,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,312,314,311,100,0,0,22,0,192,0,-1--1--1,,1|(2173,766)|
+1,313,314,307,4,0,0,22,0,192,0,-1--1--1,,1|(2372,766)|
+11,314,0,2273,766,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,315,Semana con margen negativo,2273,800,63,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+12,316,48,2079,901,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,317,319,316,100,0,0,22,0,192,0,-1--1--1,,1|(2182,901)|
+1,318,319,308,4,0,0,22,0,192,0,-1--1--1,,1|(2380,901)|
+11,319,0,2281,901,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,320,Registro de salidas,2281,935,46,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+12,321,48,2084,1007,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,322,324,321,100,0,0,22,0,192,0,-1--1--1,,1|(2084,1015)|
+1,323,324,309,4,0,0,22,0,192,0,-1--1--1,,1|(2379,1015)|
+11,324,0,2282,1015,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,325,Acumulación del precio,2282,1049,62,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+12,326,48,2082,1131,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,327,329,326,100,0,0,22,0,192,0,-1--1--1,,1|(2183,1131)|
+1,328,329,310,4,0,0,22,0,192,0,-1--1--1,,1|(2377,1131)|
+11,329,0,2280,1131,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,330,Acumulación del precio al cuadrado,2280,1165,69,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,331,Precio medio,2916,1108,50,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,332,Desviación estándar del precio,2884,1321,74,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,333,Coeficiente de variación del precio,3227,1292,72,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,334,Tiempo transcurrido,2503,1320,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,335,334,332,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,336,334,331,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,337,309,331,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,338,310,332,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,339,331,332,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,340,332,333,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,341,331,333,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,342,Margen esperado,2246,670,42,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,343,Salida de productores,2126,848,51,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,344,Precio de mercado,2147,1070,41,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,345,343,320,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,346,342,315,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,347,344,325,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,348,344,330,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,349,Compras del fondo de estabilización,821,1741,70,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,350,Precio observado por el fondo,1181,1729,64,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,351,Tiempo de reacción del fondo,1500,1746,72,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,352,Precio en granja,1415,1548,41,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,353,Participación del productor en el precio,1299,1900,66,36,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,354,Precio de referencia,1002,1896,45,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,355,Costo unitario,760,1894,61,16,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,356,Interruptor del fondo,521,1652,56,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,357,Compra máxima del fondo,500,1801,61,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,358,356,349,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,359,357,349,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,360,355,349,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,361,350,349,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,362,354,350,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,363,353,350,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,364,351,350,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,365,352,350,1,0,0,0,0,192,0,-1--1--1,,1|(1211,1695)|
+10,366,Interruptor de la cuota,1961,1526,62,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,367,Umbral de caja,1928,1620,65,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,368,Presión para tomar medidas,2264,1563,57,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,369,Cuota de encasetamiento,2589,1561,60,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,370,367,368,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,371,366,368,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,372,Caja relativa,2269,1711,56,16,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,373,372,368,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,374,Presión para tomar medidas,326,347,61,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,375,Cuota de encasetamiento,278,557,64,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,376,Encasetamiento indicado,415,616,64,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,377,374,27,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,378,375,27,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,379,376,27,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,380,Productores activos,871,-159,51,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,381,Productores iniciales,-271,1430,47,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,382,381,221,0,0,0,0,0,192,1,-1--1--1,,1|(0,0)|
+10,383,Productores iniciales,876,4,51,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,384,380,55,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,385,383,55,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,386,Brecha de margen,825,96,44,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,387,Gallinas por productor nuevo,945,-82,62,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,388,386,55,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,389,387,55,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,390,Presión por ocupar galpones,143,-22,74,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,391,390,66,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,392,Compras del fondo de estabilización,-742,-655,74,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,393,392,106,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,394,Time,1386,-652,31,16,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,395,INITIAL TIME,1546,-659,56,16,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,396,394,138,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,397,395,138,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,398,Fracción de salida,284,1371,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,399,Tiempo de salida,424,1451,64,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,400,398,249,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,401,399,249,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,402,Gallinas deseadas,-325,1131,42,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,403,402,218,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,404,Tiempo para decidir ampliaciones,-213,1334,74,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,405,404,218,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,406,Gallinas en postura,10,1329,48,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,407,406,240,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,408,Presión por ocupar galpones,309,1250,62,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,409,240,408,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,410,241,408,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,411,242,408,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,412,243,408,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,413,Gallinas en postura media,1408,453,56,26,3,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,414,Gallinas en postura tardía,1748,453,56,26,3,3,0,0,-1,0,0,0,0,0,0,0,0,0
+11,415,0,1578,453,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,416,Paso a postura tardía,1578,487,48,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,417,415,413,100,0,0,22,0,192,0,-1--1--1,,1|(1518,453)|
+1,418,415,414,4,0,0,22,0,192,0,-1--1--1,,1|(1638,453)|
+11,419,0,1918,453,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,420,Descarte,1918,487,46,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,421,419,414,100,0,0,22,0,192,0,-1--1--1,,1|(1858,453)|
+1,422,419,7,4,0,0,22,0,192,0,-1--1--1,,1|(1986,453)|
+12,423,48,1748,242,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+11,424,0,1748,332,8,6,33,3,0,0,4,0,0,0,0,0,0,0,0,0
+10,425,Mortalidad,1810,332,46,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,426,424,414,100,0,0,22,0,192,0,-1--1--1,,1|(1748,382)|
+1,427,424,423,4,0,0,22,0,192,0,-1--1--1,,1|(1748,288)|
+12,428,48,1408,652,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+11,429,0,1408,577,8,6,33,3,0,0,4,0,0,0,0,0,0,0,0,0
+10,430,Sacrificio en postura media,1500,577,62,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,431,429,413,100,0,0,22,0,192,0,-1--1--1,,1|(1408,525)|
+1,432,429,428,4,0,0,22,0,192,0,-1--1--1,,1|(1408,613)|
+12,433,48,1748,652,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+11,434,0,1748,577,8,6,33,3,0,0,4,0,0,0,0,0,0,0,0,0
+10,435,Sacrificio en postura tardía,1840,577,64,26,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,436,434,414,100,0,0,22,0,192,0,-1--1--1,,1|(1748,525)|
+1,437,434,433,4,0,0,22,0,192,0,-1--1--1,,1|(1748,613)|
+10,438,Gallinas en postura,1408,292,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,439,Tiempo por etapa de postura,1578,292,62,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,440,Tiempo por etapa de postura,1988,322,62,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,441,Gallinas en postura,808,212,46,26,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,442,Efecto del margen en las gallinas deseadas,508,17,80,36,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,443,Costo de materias primas trasladado,1971,-1563,80,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,444,Tiempo de traslado al costo del alimento,2248,-1563,80,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,445,Tabla precio observado,1018,1165,50,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,446,Precio de mercado observado,1018,1362,62,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,447,Time,858,1262,31,16,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,448,Tabla costo Fenavi,1558,1168,46,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,449,Costo Fenavi observado,1558,1452,50,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,450,Time,2353,1422,31,16,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,451,INITIAL TIME,2503,1437,56,16,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+10,452,TIME STEP,2658,1422,56,16,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,453,29,413,0,0,0,0,0,192,1,-1--1--1,,1|(0,0)|
+1,454,29,414,0,0,0,0,0,192,1,-1--1--1,,1|(0,0)|
+1,455,2,438,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,456,414,438,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,457,413,438,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,458,33,439,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,459,439,11,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,460,439,416,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,461,413,416,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,462,440,420,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,463,414,420,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,464,52,420,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,465,440,425,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,466,414,425,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,467,52,425,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,468,42,435,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,469,414,435,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,470,42,430,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,471,413,430,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,472,438,32,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,473,442,55,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,474,441,64,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,475,443,166,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,476,149,443,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,477,444,443,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,478,451,334,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,479,452,334,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,480,450,334,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,481,445,446,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,482,447,446,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,483,448,449,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+1,484,302,449,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
+10,485,Costo del alimento por huevo en 2019,2323,-1100,92,23,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
+1,486,485,183,0,0,0,0,0,64,0,-1--1--1,,1|(0,0)|
+///---\\\
+:GRAPH Precio_simulado_y_observado
+:TITLE Precio de mercado simulado y observado
+:SCALE
+:VAR Precio de mercado
+:DATASET 
+:VAR Precio de mercado observado
+:DATASET 
+
+:GRAPH Encasetamiento_simulado_y_observado
+:TITLE Encasetamiento simulado y observado
+:SCALE
+:VAR Encasetamiento
+:DATASET 
+:VAR Encasetamiento observado
+:DATASET 
+
+:GRAPH Produccion_simulada_y_observada
+:TITLE Produccion simulada y observada
+:SCALE
+:VAR Producción de huevos
+:DATASET 
+:VAR Producción observada
+:DATASET 
+
+:GRAPH Costo_simulado_y_Fenavi
+:TITLE Costo unitario simulado y costo de Fenavi
+:SCALE
+:VAR Costo unitario
+:DATASET 
+:VAR Costo Fenavi observado
+:DATASET 
+:L<%^E!@
+1:current.vdfx
+4:Time
+5:Fracción sacrificada por el brote
+9:current
+19:64,0
+24:0
+25:470
+26:470
+23:0
+15:0,0,0,0,0,0
+27:0,
+34:0,
+42:0
+72:0
+73:0
+95:0
+96:0
+97:0
+77:0
+78:0
+102:1
+93:0
+94:0
+92:0
+91:0
+90:0
+87:0
+75:
+43:
+103:8,8,8,3,8
+105:0,0,0,0,0,0,0,0,0,0
+104:Vensim Sans|12||0-0-0|0-0-0|-1--1--1|0-0-255|192-192-192|-1--1--1
