@@ -1,0 +1,131 @@
+SUBMODELO DE COSTOS DEL HUEVO PARA VENSIM PLE
+Versión del 13-nov-2026 (corrige el INITIAL de Otros costos por huevo en 2019, que Vensim no acepta dentro de una expresión). Archivo de referencia: Submodelo_costos.mdl (misma estructura y mismos valores).
+
+1. CONFIGURACIÓN (Model > Settings > Time Bounds)
+INITIAL TIME = 0, FINAL TIME = 470, TIME STEP = 0.25, SAVEPER = 1, Units for Time = Week, integración Euler.
+Semana 0 = 1 de enero de 2019. Semana 403 = 22 a 28 de septiembre de 2026 (último costo observado de Fenavi).
+Decimales con punto. Los nombres van con tildes, tal como aparecen aquí.
+
+2. TABLAS DE DATOS (lookups)
+En el editor de ecuaciones: Type = Lookup. Pegar el rango y los puntos de la tabla con el mismo nombre que está en
+Tablas_Vensim_desde_base.txt (carpeta del artículo). Son las mismas series, un punto por mes, en la mitad del mes.
+Antes del primer punto y después del último, Vensim mantiene el valor del extremo.
+Tabla precio del maíz   [USD/tonelada]   Banco Mundial (Pink Sheet), maíz amarillo de EE. UU., promedio mensual en la mitad de cada mes. Desde oct-2026 constante en el valor de sep-2026.
+Tabla precio de la torta de soya   [USD/tonelada]   Banco Mundial (Pink Sheet), torta de soya, promedio mensual. Cambia de definición en 2021 y 2025. Desde oct-2026 constante.
+Tabla TRM   [COP/USD]   TRM promedio mensual (Banco de la República). Desde oct-2026 constante en el valor de sep-2026.
+Tabla IPC   [Dmnl]   IPC total del DANE (dic-2018 = 100), mensual. Oct-2026 a dic-2027: supuesto, inflación de los últimos 12 meses (6,28 % anual).
+Tabla salario mínimo   [COP/mes]   Salario mínimo mensual por decreto, escalón el 1 de enero. 2027: supuesto de +7 %.
+Tabla costo Fenavi   [COP/huevo]   Fenavi-Fonav, Fenaviquín: costo de producción del huevo sin amortización del ave, pesos corrientes (serie armada el 5-nov-2026). Oct-2026 a ene-2027: proyección de Fenavi (ed. 456, p. 17). Solo para comparar.
+
+3. CONSTANTES
+Choque del precio de las materias primas = 0   [Dmnl]
+    0 = base; 0.15 = maíz y torta de soya 15 % más caros desde la semana del choque.
+Choque de la TRM = 0   [Dmnl]
+    0 = base; 0.1 = devaluación de 10 %; -0.1 = revaluación.
+Semana de inicio del choque = 400   [Week]
+    400 = comienzos de septiembre de 2026, después del último dato.
+Participación del maíz en el alimento = 0.632   [Dmnl]
+    Peso que reproduce la fórmula básica del alimento huevo de Fenavi con sus precios de maíz y torta de soya puestos en Bogotá (Fenaviquín 456, p. 16; 16 meses, error máximo 0,2 %). Clase C.
+Participación de la soya en el alimento = 0.191   [Dmnl]
+    Misma regresión. El resto de la fórmula (carbonato, premezclas, fríjol soya) entra por el factor de fabricación. Clase C.
+Sobrecosto de importación = 0.395   [Dmnl]
+    Precio de Fenavi puesto en Bogotá frente a Banco Mundial × TRM, oct-2025 a may-2026, ponderado por la fórmula: flete marítimo, puerto y flete a Bogotá. Sin arancel (TLC con EE. UU.). Clase C.
+Kilos por tonelada = 1000   [kg/tonelada]
+Tiempo de traslado al costo del alimento = 26   [Week]
+    Tiempo medio en que el precio internacional llega al costo del alimento (inventarios de grano, contratos y la estructura de costos de Fenavi, rezagada 2 meses según Fenaviquín 456, p. 16). Calibrado contra el costo total de Fenavi 2019-2026: con 20 a 39 semanas el error medio queda entre 4,1 % y 4,4 %. Clase K.
+Factor de fabricación del alimento = 1.174   [Dmnl]
+    Otros ingredientes, fabricación y margen del fabricante. Calibrado junto con el tiempo de traslado contra el costo total de Fenavi 2019-2026. Clase K.
+Alimento por huevo = 0.1601   [kg/huevo]
+    56,035 kg de alimento acumulado por ave entre 350 huevos (Fenaviquín 381, p. 16; 416, p. 21; 456, p. 17). Clase F.
+Participación inicial del alimento en el costo = 0.7   [Dmnl]
+    El alimento pesó 67,8 % del costo en 2019 (metodología anterior de Fenavi) y 69,7 % en junio de 2026 (Fenaviquín 456, p. 17: 222,5 de 319,2 $/huevo). Clase F.
+Participación de la mano de obra en otros costos = 0.283   [Dmnl]
+    Salto de enero de 2026 en Fenaviquín 456: otros costos subieron 7,4 % cuando el salario mínimo subió 23,0 % y el IPC 1,2 %. Una sola observación. Clase C.
+Semana del último dato = 403   [Week]
+    Semana 403 = 22 a 28 de septiembre de 2026, último mes con costo observado de Fenavi.
+
+4. ECUACIONES (en este orden se pueden ir montando)
+[Auxiliar] Precio internacional del maíz = Tabla precio del maíz(Time)*(1+Choque del precio de las materias primas*STEP(1, Semana de inicio del choque))
+    Unidades: USD/tonelada
+    Comentario: Dato histórico; desde la semana del choque se le suma el choque del escenario.
+[Auxiliar] Precio internacional de la torta de soya = Tabla precio de la torta de soya(Time)*(1+Choque del precio de las materias primas*STEP(1, Semana de inicio del choque))
+    Unidades: USD/tonelada
+    Comentario: Dato histórico más el choque del escenario.
+[Auxiliar] Tasa de cambio = Tabla TRM(Time)*(1+Choque de la TRM*STEP(1, Semana de inicio del choque))
+    Unidades: COP/USD
+    Comentario: Dato histórico más el choque del escenario.
+[Auxiliar] Costo de maíz y soya por kilo de alimento = (Participación del maíz en el alimento*Precio internacional del maíz+Participación de la soya en el alimento*Precio internacional de la torta de soya)*Tasa de cambio*(1+Sobrecosto de importación)/Kilos por tonelada
+    Unidades: COP/kg
+    Comentario: Costo de la parte de maíz y torta de soya en un kilo de alimento, puesto en la planta, con los precios de este mes.
+[Auxiliar] Costo de materias primas trasladado = SMOOTH(Costo de maíz y soya por kilo de alimento, Tiempo de traslado al costo del alimento)
+    Unidades: COP/kg
+    Comentario: Demora de información de primer orden (un nivel interno). Arranca en el valor de la semana 0.
+[Auxiliar] Costo del alimento balanceado = Costo de materias primas trasladado*Factor de fabricación del alimento
+    Unidades: COP/kg
+[Auxiliar] Costo del alimento por huevo = Costo del alimento balanceado*Alimento por huevo
+    Unidades: COP/huevo
+[Auxiliar] Costo del alimento por huevo en 2019 = INITIAL(Costo del alimento por huevo)
+    Unidades: COP/huevo
+    Comentario: Costo del alimento en la semana 0, congelado. Va en variable aparte porque Vensim exige que INITIAL sea toda la expresión a la derecha del signo igual.
+[Auxiliar] Otros costos por huevo en 2019 = Costo del alimento por huevo en 2019*(1-Participación inicial del alimento en el costo)/Participación inicial del alimento en el costo
+    Unidades: COP/huevo
+    Comentario: Se calcula para que el alimento pese 70 % del costo al arrancar.
+[Auxiliar] Índice del salario mínimo = Tabla salario mínimo(Time)/Tabla salario mínimo(INITIAL TIME)
+    Unidades: Dmnl
+    Comentario: 1 en la semana 0.
+[Auxiliar] Índice de precios = Tabla IPC(Time)/Tabla IPC(INITIAL TIME)
+    Unidades: Dmnl
+    Comentario: 1 en la semana 0. Es el mismo índice del sector de mercado.
+[Auxiliar] Otros costos por huevo = Otros costos por huevo en 2019*(Participación de la mano de obra en otros costos*Índice del salario mínimo+(1-Participación de la mano de obra en otros costos)*Índice de precios)
+    Unidades: COP/huevo
+    Comentario: Mano de obra (sigue al salario mínimo) y demás costos (siguen al IPC).
+[Auxiliar] Costo unitario = Costo del alimento por huevo+Otros costos por huevo
+    Unidades: COP/huevo
+    Comentario: Costo de producir un huevo en granja, sin amortización del ave, pesos corrientes. Es la salida del sector que usa el resto del modelo.
+[Auxiliar] Participación del alimento en el costo = Costo del alimento por huevo/Costo unitario
+    Unidades: Dmnl
+    Comentario: Para comparar con lo que publica Fenavi (69,7 % en junio de 2026).
+[Auxiliar] Costo Fenavi observado = Tabla costo Fenavi(Time)
+    Unidades: COP/huevo
+    Comentario: Serie de Fenavi para graficar junto al costo unitario.
+[Auxiliar] Error relativo del costo = (Costo unitario-Costo Fenavi observado)/Costo Fenavi observado
+    Unidades: Dmnl
+    Comentario: Positivo: el modelo da un costo más alto que Fenavi.
+[Flujo] Acumulación del error absoluto = IF THEN ELSE(Time<=Semana del último dato, ABS(Error relativo del costo), 0)
+    Unidades: Dmnl
+    Comentario: Suma el error absoluto solo mientras hay datos observados.
+[Nivel] Error absoluto acumulado = INTEG(Acumulación del error absoluto, 0)
+    Unidades: Week
+[Auxiliar] Error porcentual absoluto medio = Error absoluto acumulado/MAX(MIN(Time, Semana del último dato)-INITIAL TIME, TIME STEP)
+    Unidades: Dmnl
+    Comentario: Promedio del error absoluto en el tiempo transcurrido (con datos). Se lee al final de la corrida; multiplicar por 100 para pasarlo a %.
+
+5. VALORES DE CONTROL (corrida con los datos de arriba y los choques en 0)
+Si el modelo está bien montado, en la tabla de Vensim deben salir estos valores (diferencias de unas décimas son normales).
+
+Semana  Maíz y soya por kg  Trasladado  Alimento/huevo  Otros/huevo  Costo unitario  Fenavi   Error
+     0          770,5          770,5         144,8          62,1          206,9      183,4   +12,8 %
+    52          815,4          799,7         150,3          63,6          213,9      210,6    +1,6 %
+   104        1.145,6          952,6         179,0          65,4          244,4      264,2    -7,5 %
+   156        1.463,8        1.289,0         242,3          68,9          311,2      302,4    +2,9 %
+   208        2.010,1        1.811,4         340,5          77,3          417,8      418,9    -0,3 %
+   260        1.245,4        1.519,9         285,7          85,7          371,4      352,2    +5,5 %
+   312        1.226,8        1.221,9         229,7          91,8          321,5      336,8    -4,5 %
+   364        1.079,7        1.112,0         209,0          97,8          306,8      320,1    -4,2 %
+   403        1.050,4        1.049,1         197,2         108,4          305,6      316,7    -3,5 %
+
+Otros costos por huevo en 2019 = 62,06. Error porcentual absoluto medio al final de la corrida = 0,041 (4,1 %).
+El costo de Fenavi de enero y febrero de 2019 no se publicó (se repitió el de marzo), por eso el error de la semana 0 es alto.
+
+6. GRÁFICOS PERSONALIZADOS (Control Panel > Graphs > New)
+Costo unitario con Costo Fenavi observado; Costo del alimento por huevo con Otros costos por huevo;
+Costo de maíz y soya por kilo de alimento con Costo de materias primas trasladado.
+
+7. PRUEBAS RÁPIDAS
+a) Choque del precio de las materias primas = 0.15: desde la semana 400 el costo de maíz y soya sube 15 % de golpe y el
+   costo unitario sube poco a poco: en la semana 426 el costo trasladado lleva 63 % del alza y el costo unitario está
+   6 % arriba de la corrida base; en la semana 470, cerca de 9 % arriba.
+b) Tiempo de traslado al costo del alimento = 1: el costo unitario sigue mes a mes al Banco Mundial y el error medio sube
+   a 7,5 %.
+c) TIME STEP = 0.125: el costo unitario no debe cambiar más de 0,2 pesos en ninguna semana.
+d) Model > Units Check. Las unidades se revisaron a mano; si Vensim marca algo, se corrige antes de seguir con el siguiente submodelo.
