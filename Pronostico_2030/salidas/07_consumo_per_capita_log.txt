@@ -1,0 +1,7 @@
+Precio de referencia (promedio 2019) = 300.75 | IPC promedio 2019 = 102.556 
+Punto inicial (semana 0) = 280.1 
+   periodo pendiente_huevos_por_anio error_estandar p_valor    r2
+ 2019-2026                     10.41           2.91   0.012 0.680
+ 2022-2026                      0.20           1.55   0.906 0.005
+Media de la meseta = 372 | intervalo de 80 %: 364.9 a 379.2 
+Listo: Pronostico_2030/salidas/07_consumo_per_capita_pronostico.xlsx 

@@ -1,0 +1,19 @@
+Prima por año en la ventana (pp):
+ anio aumento inflacion_anio_anterior prima
+ 2019    6.00                    3.18  2.82
+ 2020    6.00                    3.80  2.20
+ 2021    3.50                    1.62  1.88
+ 2022   10.07                    5.62  4.45
+ 2023   16.00                   13.12  2.88
+ 2024   12.07                    9.28  2.79
+ 2025    9.50                    5.20  4.30
+ 2026   23.00                    5.10 17.90
+Cerca superior de Tukey = 6.88 | atípicos: 2026 
+Prima base = 2.85 | bajo = 0 | alto = 4.45 
+ anio    base    bajo    alto aumento_base_pct
+ 2027 1925114 1875219 1953073             9.95
+ 2028 2072379 1957729 2141280             7.65
+ 2029 2193606 1996884 2322143             5.85
+ 2030 2321925 2036822 2518282             5.85
+ 2031 2457750 2077558 2730988             5.85
+Listo: Pronostico_2030/salidas/05_salario_minimo_pronostico.xlsx 

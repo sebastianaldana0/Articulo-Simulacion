@@ -1,0 +1,61 @@
+Registered S3 method overwritten by 'quantmod':
+  method            from
+  as.zoo.data.frame zoo 
+ serie especificacion            ventana MAPE_12m MAPE_24m MAPE_36m MAPE_51m
+  maiz              - Caminata aleatoria   16.051   27.428   35.246   37.425
+  maiz    Box-Jenkins           51 meses   15.831   27.184   35.847   38.001
+  maiz    Box-Jenkins           93 meses   15.761   27.213   36.020   38.231
+  maiz    Box-Jenkins          144 meses   15.951   27.420   36.002   38.245
+  maiz    Box-Jenkins   Toda la historia   15.903   27.399   36.389   38.637
+  maiz          libre   Toda la historia   16.074   26.554   34.657   36.910
+  maiz          libre           51 meses   18.519   32.989   44.869   52.645
+  maiz          libre          144 meses   19.300   36.121   48.817   58.211
+  maiz          libre           93 meses   18.608   35.142   52.857   66.189
+ torta              - Caminata aleatoria   14.638   19.801   25.850   29.435
+ torta    Box-Jenkins   Toda la historia   14.496   19.544   26.039   30.343
+ torta    Box-Jenkins           51 meses   14.719   19.622   26.219   30.665
+ torta    Box-Jenkins          144 meses   14.647   19.610   26.304   30.783
+ torta    Box-Jenkins           93 meses   14.654   19.605   26.246   30.825
+ torta          libre           51 meses   15.633   21.489   25.154   27.258
+ torta          libre           93 meses   14.925   19.951   24.086   28.638
+ torta          libre   Toda la historia   14.496   19.544   26.039   30.343
+ torta          libre          144 meses   14.647   19.610   26.304   30.783
+   trm              - Caminata aleatoria   10.242   15.636   20.246   24.785
+   trm    Box-Jenkins           93 meses    9.967   15.509   20.102   24.842
+   trm    Box-Jenkins          144 meses   10.081   15.605   20.199   24.873
+   trm    Box-Jenkins   Toda la historia   10.050   15.573   20.158   24.900
+   trm    Box-Jenkins           51 meses    9.929   15.563   20.086   24.992
+   trm          libre   Toda la historia   10.050   15.573   20.158   24.900
+   trm          libre          144 meses   10.435   18.139   23.579   29.265
+   trm          libre           93 meses    9.755   16.686   22.667   29.550
+   trm          libre           51 meses   12.167   21.301   28.304   34.687
+ cobertura80_promedio fraccion_con_deriva fraccion_con_d2
+                   NA                  NA              NA
+                0.702               0.000           0.000
+                0.833               0.000           0.000
+                0.869               0.000           0.000
+                0.845               0.000           0.000
+                0.774               0.000           0.000
+                0.679               0.048           0.095
+                0.810               0.143           0.000
+                0.774               0.095           0.048
+                   NA                  NA              NA
+                0.952               0.000           0.000
+                0.940               0.000           0.000
+                0.988               0.000           0.000
+                0.964               0.000           0.000
+                0.762               0.000           0.048
+                0.952               0.000           0.000
+                0.952               0.000           0.000
+                0.988               0.000           0.000
+                   NA                  NA              NA
+                0.738               0.000           0.000
+                0.762               0.000           0.000
+                0.726               0.000           0.000
+                0.702               0.000           0.000
+                0.726               0.000           0.000
+                0.726               0.095           0.048
+                0.714               0.286           0.095
+                0.631               0.143           0.095
+Listo: Pronostico_2030/salidas/00_eleccion_ventana.xlsx
+exit 0

@@ -1,0 +1,14 @@
+Registered S3 method overwritten by 'quantmod':
+  method            from
+  as.zoo.data.frame zoo 
+Tasa representativa del mercado (TRM): 93 meses de entrenamiento; último dato 3179.8 COP/US$
+ADF en nivel p = 0.972 | ADF en diferencia p = 0.018 
+Modelo elegido: ARIMA(0,1,0)  AICc = -362.66 
+Sin coeficientes: es una caminata aleatoria
+Si se agregara deriva: t = 0.01 (no significativa si |t| < 1,96)
+Ljung-Box (12 rezagos) p = 0.625 | Jarque-Bera p = 0 
+Validación 24 meses: MAPE ARIMA = 10.1 % | MAPE caminata = 10.1 % | cobertura 80 % = 0.88 
+Control con meses ya publicados después del corte:
+      fecha    real pronostico error_pct
+ 2026-10-01 3198.91    3179.78      -0.6
+Listo: Pronostico_2030/salidas/03_trm_pronostico.xlsx 

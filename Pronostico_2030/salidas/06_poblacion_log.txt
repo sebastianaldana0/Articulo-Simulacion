@@ -1,0 +1,16 @@
+ anio poblacion_30_junio crecimiento_pct       tipo
+ 2018           48258494              NA  observado
+ 2019           49266526           2.089  observado
+ 2020           50390790           2.282  observado
+ 2021           51115637           1.438  observado
+ 2022           51643565           1.033  observado
+ 2023           52117067           0.917  observado
+ 2024           52613753           0.953  observado
+ 2025           53057212           0.843  observado
+ 2026           53399171           0.645  observado
+ 2027           53712233           0.586 pronostico
+ 2028           54001502           0.539 pronostico
+ 2029           54269406           0.496 pronostico
+ 2030           54518223           0.458 pronostico
+ 2031           54747818           0.421 pronostico
+Listo: Pronostico_2030/salidas/06_poblacion_pronostico.xlsx 

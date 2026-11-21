@@ -1,0 +1,13 @@
+Registered S3 method overwritten by 'quantmod':
+  method            from
+  as.zoo.data.frame zoo 
+Precio internacional de la torta de soya: 93 meses de entrenamiento; último dato 447 US$/t
+Cambio del logaritmo en ene-2021 = 0.127 | ene-2025 = -0.022 | desviación estándar mensual = 0.054 
+ADF en nivel p = 0.666 | ADF en diferencia p = 0.01 
+Modelo elegido: ARIMA(0,1,1)  AICc = -280.13 
+   ma1 
+0.2681 
+Si se agregara deriva: t = 0.37 (no significativa si |t| < 1,96)
+Ljung-Box (12 rezagos) p = 0.233 | Jarque-Bera p = 0.041 
+Validación 24 meses: MAPE ARIMA = 14.4 % | MAPE caminata = 13.7 % | cobertura 80 % = 0.83 
+Listo: Pronostico_2030/salidas/02_torta_soya_pronostico.xlsx 

@@ -1,0 +1,12 @@
+Registered S3 method overwritten by 'quantmod':
+  method            from
+  as.zoo.data.frame zoo 
+Precio internacional del maíz: 93 meses de entrenamiento; último dato 239.6 US$/t
+ADF en nivel p = 0.68 | ADF en diferencia p = 0.025 
+Modelo elegido: ARIMA(1,1,1)  AICc = -254.91 
+    ar1     ma1 
+-0.3364  0.6930 
+Si se agregara deriva: t = 0.56 (no significativa si |t| < 1,96)
+Ljung-Box (12 rezagos) p = 0.817 | Jarque-Bera p = 0.811 
+Validación 24 meses: MAPE ARIMA = 7.4 % | MAPE caminata = 10.3 % | cobertura 80 % = 1 
+Listo: Pronostico_2030/salidas/01_maiz_pronostico.xlsx 
