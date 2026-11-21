@@ -76,3 +76,13 @@ H.registrar("07_valores_para_vensim", f"Valores para pegar en Vensim desde {ARCH
             {k: round(v, 6) for k, v in leidos.items()}, {"control_semana_403_encasetamiento": float(control.loc[403, "Encasetamiento"])},
             [ruta_txt, ruta_csv], sim.md5)
 print(f"\nGuardado: {ruta_txt.name} y {ruta_csv.name}")
+
+FINALES = {
+    "Sensibilidad de las gallinas deseadas al margen": 1,
+    "Tiempo de ajuste de gallinas": 26,
+    "Tiempo de percepción del precio": 4,
+    "Productores posibles": 4450,
+    "Tasa de contagio": 0.012,
+}
+valores.update(FINALES)
+leidos.update(FINALES)
