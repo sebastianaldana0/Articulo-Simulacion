@@ -1,0 +1,109 @@
+CALIBRACIÓN DEL MODELO FINAL, VERSIÓN SEMANAL
+Versión del 21-nov-2026
+
+Esta carpeta repite la calibración que se hizo con nuestro modelo, ahora con el
+modelo de los compañeros (Modelo final.mdl, v4). Todo lo de este modelo queda
+aquí: no se cambia nada de Calibracion_PySD, Modelo actual.mdl, Modelo
+calibrado.mdl ni Modelo final.mdl. El paso 8 lee Modelo calibrado.mdl, pero
+lo copia a modelo_comparacion/ y lo traduce ahí.
+
+
+------------------------------------------------------------------------
+1. QUÉ HAY
+------------------------------------------------------------------------
+
+Modelo final semanal.mdl
+    Modelo final.mdl con las 11 tablas de datos en semanas. Las ecuaciones y
+    el diagrama son los mismos. Cambios:
+    - Semanas 0 a 403 de las 11 tablas: un punto por semana, los mismos de
+      Modelo actual.mdl (hoja semanal de Base final- Borrador.xlsx). Se
+      comprobó con PySD que las series observadas de los dos modelos son
+      idénticas.
+    - Desde la semana 404 (siete entradas hasta la 626 y el costo de Fenavi
+      hasta la 470): los supuestos de Modelo final.mdl, pasados a semanas con
+      la misma regla de la base para cada serie (promedio de los días de la
+      semana; población en línea recta al día central). Las cuatro series de
+      comparación terminan en la 403.
+    - Semana del último dato observado: 402 -> 403 (con las tablas semanales
+      el último dato es la semana del 22 al 28 de septiembre de 2026).
+    - Factor de empalme del costo: 1,036 -> 1,035 (costo de Fenavi sobre costo
+      estructural en la semana 403 con las tablas semanales: 318,2 / 307,5).
+    - Efecto: entre 2020 y 2025 el encasetamiento, el precio, la producción y
+      el costo cambian menos de 0,8 % por mes frente a Modelo final.mdl.
+    - La TRM baja 2,9 % en la semana 404: el supuesto de los compañeros deja
+      la TRM constante en el promedio de septiembre de 2026 (3.179,8) y la
+      última semana con dato vale 3.273,7. Solo afecta el futuro.
+
+Scripts 01 a 07, probar_valores.py, herramientas.py y rapido.py
+    Los mismos de Calibracion_PySD, con estas diferencias:
+    - Ventana de calibración desde la semana 52 (enero de 2020). Hasta la 51
+      el encasetamiento copia el dato observado (calentamiento), así que 2019
+      no puede entrar al error.
+    - Prueba parcial (paso 4): solo se reemplaza el precio. El costo de la
+      historia ya es el de Fenavi (Interruptor de costo observado = 1); por la
+      misma razón su MAPE sale cerca de cero y no sirve como prueba.
+    - config.py trae los parámetros con los nombres de este modelo y los
+      valores de los compañeros como "actual", con los mismos rangos de la
+      primera calibración. Quedan por fuera del rango: Tiempo de ajuste de
+      gallinas (104; máximo 26), Tiempo para decidir ampliaciones y Tiempo
+      para ocupar galpones (104; máximo 52), Fracción de galpones que se
+      desmontan (1; máximo 0,5), Productores posibles (2.669; mínimo 3.000) y
+      Tiempo de salida (22; mínimo 26). El optimizador arranca desde el
+      límite más cercano.
+    - Dos supuestos que solo tiene este modelo entran al tamizaje con rangos
+      provisionales: Horizonte del pronóstico de demanda (26 a 104) y Semanas
+      de capital de trabajo (4 a 16).
+
+08_comparar_modelos.py (nuevo)
+    Corre nuestro modelo calibrado y este modelo (tal cual y, cuando exista
+    resultados/valores_cerrado.json, calibrado) con los mismos datos, la
+    misma ventana (2020-2025) y la misma prueba (ene-sep 2026). Deja la tabla
+    de métricas, la comparación con el ICA y una figura.
+
+
+------------------------------------------------------------------------
+2. CÓMO SE CORRE EN VISUAL STUDIO CODE
+------------------------------------------------------------------------
+
+  a. Archivo > Abrir carpeta > Calibracion_Modelo_final.
+  b. Ctrl+Shift+P > "Python: Select Interpreter" > "Enter interpreter path"
+     > "Find..." y escoger
+       ..\Calibracion_PySD\.venv\Scripts\python.exe
+     Usa los paquetes que ya están instalados; no instala ni cambia nada en
+     Calibracion_PySD. Si prefieren un entorno propio: "Python: Create
+     Environment" > Venv > marcar requirements.txt (si pip falla por
+     permisos: .venv\Scripts\python -m pip install --no-cache-dir -r
+     requirements.txt).
+  c. Abrir cada script y correrlo con el triángulo de arriba a la derecha,
+     en orden, esperando a que termine el anterior.
+
+
+------------------------------------------------------------------------
+3. LOS PASOS
+------------------------------------------------------------------------
+
+Paso 1. 01_probar_instalacion.py: corrida base con los valores de los
+        compañeros. Muestra el error en 2020-2025 y en ene-sep 2026.
+Paso 2. 02_comparar_con_vensim.py. Antes: abrir en Vensim el Modelo final
+        semanal.mdl de esta carpeta, simular sin cambiar nada, copiar con
+        "Table Time Down" las tablas de Encasetamiento, Precio de mercado,
+        Producción de huevos y Costo unitario, pegarlas una debajo de otra en
+        el Bloc de notas y guardar como vensim_base.txt en esta carpeta. En
+        este modelo el paso importa más que en el otro, porque usa FORECAST
+        y :NA:, que PySD podría calcular distinto.
+Paso 3. 03_tamizaje.py: 300 corridas al azar con los 20 parámetros (11 K y
+        9 S). Después se editan en config.py las listas CALIBRAR_REGLA y
+        CALIBRAR_CERRADO con los K que pesen (correlación de 0,2 o más).
+Paso 4. 04_calibrar_regla.py: prueba parcial con el precio observado.
+Paso 5. 05_calibrar_cerrado.py: modelo completo, error de encasetamiento y
+        precio mitad y mitad.
+Paso 6. 06_diagnostico.py: métricas, residuos y perfiles.
+Paso 7. 07_valores_para_vensim.py: valores y tabla de control. Con ellos se
+        crea en esta carpeta Modelo final semanal calibrado.mdl, cambiando
+        solo las constantes.
+Paso 8. 08_comparar_modelos.py: comparación con nuestro modelo.
+
+Cada script deja una línea en registro_calibracion.csv (de esta carpeta) y
+guarda sus tablas y gráficas en resultados/. El modo rápido para revisar que
+todo corre se activa con la variable de entorno PRUEBA_RAPIDA=1; lo que salga
+así no es una calibración.

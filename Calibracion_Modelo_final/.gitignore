@@ -1,0 +1,8 @@
+modelo/
+modelo_comparacion/
+.mplconfig/
+matplotlib-*/
+.venv/
+.pipcache/
+.vscode/
+__pycache__/

@@ -1,0 +1,85 @@
+MODELO PARA ESCENARIOS 2027-2030
+Versión del 21-nov-2026
+
+Copia de Modelo calibrado.mdl (calibrado con 2019-2025) preparada para correr
+escenarios hasta 2030. Modelo calibrado.mdl no se tocó.
+
+
+------------------------------------------------------------------------
+1. QUÉ CAMBIA FRENTE A MODELO CALIBRADO.MDL
+------------------------------------------------------------------------
+
+- FINAL TIME: 470 -> 626 (31-dic-2030 a 6-ene-2031).
+- Las siete tablas de entrada (población, consumo per cápita de referencia,
+  IPC, maíz, torta de soya, TRM y salario mínimo) siguen desde la semana 404
+  con el pronóstico de Pronostico_2030, pasado a semanas con la misma regla de
+  la base para cada serie. Las semanas 0 a 403 (datos) no cambian.
+- Variables nuevas: "Semana de inicio de las políticas" (418, primera semana
+  de enero de 2027) y "Política activa" (0 antes de esa semana y 1 desde
+  ella). La cuota y el fondo solo actúan desde enero de 2027, aunque su
+  interruptor esté en 1. En el diagrama quedaron junto a la cuota y al fondo.
+- Semana de inicio del choque: 400 -> 418, para que los choques de TRM y
+  materias primas empiecen con las políticas y no en semanas con dato.
+- Las tablas de comparación (encasetamiento, producción, precio y costo de
+  Fenavi) siguen terminando con los datos.
+
+Comprobado con PySD: con los interruptores en 0, las semanas 0 a 403 dan lo
+mismo que Modelo calibrado.mdl (diferencia 0); la corrida llega a la semana
+626 sin errores; con la cuota y el fondo encendidos no cambia nada antes de
+la semana 418.
+
+
+------------------------------------------------------------------------
+2. LOS TRES ARCHIVOS
+------------------------------------------------------------------------
+
+Modelo escenarios.mdl                    entradas del pronóstico base
+Modelo escenarios - entradas bajas.mdl   escenario bajo de Pronostico_2030
+Modelo escenarios - entradas altas.mdl   escenario alto de Pronostico_2030
+
+Solo cambian seis tablas (maíz, torta, TRM, IPC, salario y consumo de
+referencia); la población tiene un solo escenario. Bajo y alto: maíz, torta,
+TRM y consumo en los límites del intervalo de predicción de 80 %; IPC de 2027
+con 4,4 % y 5,19 % y desde 2028 con 2 % y 4 %; salario con prima de 0 y de
+4,45 puntos. Si se cambia una ecuación en uno de los tres, hay que cambiarla
+también en los otros dos.
+
+
+------------------------------------------------------------------------
+3. CÓMO SE CORRE UN ESCENARIO EN VENSIM
+------------------------------------------------------------------------
+
+Abrir el archivo, cambiar el valor de la palanca, escribir un nombre para la
+corrida (por ejemplo Base, Cuota, Brote2027) y simular. Palancas:
+
+  Política de cuota      Interruptor de la cuota (0 o 1), Umbral de caja
+                         (0,3), Cuota de encasetamiento (1.078.000 por semana)
+  Fondo                  Interruptor del fondo (0 o 1), Compra máxima del
+                         fondo, Tiempo de reacción del fondo
+  Brote sanitario        Interruptor del brote (0 o 1), Semana de inicio del
+                         brote (430), Duración del brote (18), Fracción
+                         sacrificada por el brote (0,1)
+  Choques                Choque de la TRM (0,1 = devaluación de 10 %), Choque
+                         del precio de las materias primas (0,15 = +15 %),
+                         Semana de inicio del choque (418)
+  Inicio de políticas    Semana de inicio de las políticas (418)
+
+"Semanas con margen negativo" acumula desde 2019; para comparar escenarios
+conviene usar lo que suma entre la semana 418 y la 626.
+
+
+------------------------------------------------------------------------
+4. LO QUE HAY QUE SABER
+------------------------------------------------------------------------
+
+- 2026 es el mismo de Modelo calibrado.mdl. La comparación con los datos de
+  ene-sep 2026 es la prueba del modelo y se reporta aparte.
+- En la semana 404 la TRM baja 2,9 %: el pronóstico parte del promedio de
+  septiembre de 2026 (3.179,8) y la última semana con dato promedia 3.273,7.
+  El maíz sube 3,8 % por el pronóstico de octubre de 2026.
+- Con el umbral de caja de 0,3, la cuota y el fondo no se activan en el
+  escenario base ni en el bajo: después de 2027 la caja relativa no baja de
+  2,2 y el margen esperado sigue positivo, aun con choques de +15 % en
+  materias primas o +10 % en la TRM. Sí se activan con las entradas altas
+  (unas 120 semanas). Si el grupo quiere evaluar esas políticas en el
+  escenario base, hay que revisar cuándo se encienden.
