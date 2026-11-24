@@ -6,7 +6,7 @@ Organizada el 23-nov-2026. No se borró ningún archivo: lo que ya no se usa est
                        Fuentes/: archivos originales descargados (Fenavi, DANE, SIPSA, ICA,
                        Banco Mundial, Banco de la República).
 2_Modelo/              Modelo huevo.mdl, el modelo definitivo, con sus corridas de Vensim
-                       (Validacion, Base, Entradas bajas, Entradas altas). Ver LEEME.txt.
+                       (Base, Entradas bajas, Entradas altas). Ver LEEME.txt.
                        Parametros_modelo_fuentes.md: parámetros con su fuente.
 3_Calibracion/         Modelo actual v2.mdl (el modelo antes de calibrar, versión 2) y
                        Calibracion_PySD/ (scripts y registro de la calibración).

@@ -55,29 +55,11 @@ Paso a postura tardía=
 	~		|
 
 Encasetamiento=
-	IF THEN ELSE(Interruptor del encasetamiento observado=1 :AND: Time<=Semana del \
-		último dato, Encasetamiento observado, Encasetamiento indicado-Presión para tomar \
-		medidas*MAX(0, Encasetamiento indicado-Cuota de encasetamiento))
+	Encasetamiento indicado-Presión para tomar medidas*MAX(0, Encasetamiento indicado-Cuota de encasetamiento\
+		)
 	~	aves/Week
 	~	Pollitas de un día que entran a las granjas. Sin política es igual al \
-		indicado; con la cuota activa no pasa de la cuota. Con el interruptor del \
-		encasetamiento observado en 1, hasta la semana del último dato es el dato \
-		de Fenavi y desde la semana siguiente lo decide el modelo.
-	|
-
-Interruptor del encasetamiento observado=
-	0
-	~	Dmnl
-	~	0 = corrida de validación: todo el encasetamiento lo decide el modelo \
-		desde 2019. 1 = corridas de escenarios: el encasetamiento sigue el dato de \
-		Fenavi hasta la semana del último dato, así los escenarios arrancan desde \
-		el recorte observado de 2026. Clase P.
-	|
-
-Semana del último dato=
-	403
-	~	Week
-	~	Última semana con dato de encasetamiento: 22 al 28 de septiembre de 2026.
+		indicado; con la cuota activa no pasa de la cuota.
 	|
 
 Maduración=
@@ -4104,17 +4086,11 @@ $-1--1--1,0,|12||-1--1--1|-1--1--1|-1--1--1|-1--1--1|-1--1--1|96,96,70,2
 1,525,524,192,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
 10,526,Sensibilidad de las gallinas deseadas al margen,619,1354,75,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
 1,527,526,55,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
-10,528,Interruptor del encasetamiento observado,512,2202,75,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
-1,529,528,27,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
-10,530,Semana del último dato,232,2162,57,26,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
-1,531,530,27,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
-10,532,Encasetamiento observado,212,2252,62,16,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
-1,533,532,27,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
-10,534,Time,432,2272,30,16,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|||128-128-128,0,0,0,0,0,0
-1,535,534,27,0,0,0,0,0,192,0,-1--1--1,,1|(0,0)|
 ///---\\\
 :GRAPH Precio_simulado_y_observado
 :TITLE Precio de mercado simulado y observado
+:X-MIN 0
+:X-MAX 403
 :SCALE
 :VAR Precio de mercado
 :DATASET 
@@ -4123,6 +4099,8 @@ $-1--1--1,0,|12||-1--1--1|-1--1--1|-1--1--1|-1--1--1|-1--1--1|96,96,70,2
 
 :GRAPH Encasetamiento_simulado_y_observado
 :TITLE Encasetamiento simulado y observado
+:X-MIN 0
+:X-MAX 403
 :SCALE
 :VAR Encasetamiento
 :DATASET 
@@ -4131,6 +4109,8 @@ $-1--1--1,0,|12||-1--1--1|-1--1--1|-1--1--1|-1--1--1|-1--1--1|96,96,70,2
 
 :GRAPH Produccion_simulada_y_observada
 :TITLE Produccion simulada y observada
+:X-MIN 0
+:X-MAX 403
 :SCALE
 :VAR Producción de huevos
 :DATASET 
@@ -4139,6 +4119,8 @@ $-1--1--1,0,|12||-1--1--1|-1--1--1|-1--1--1|-1--1--1|-1--1--1|96,96,70,2
 
 :GRAPH Costo_simulado_y_Fenavi
 :TITLE Costo unitario simulado y costo de Fenavi
+:X-MIN 0
+:X-MAX 403
 :SCALE
 :VAR Costo unitario
 :DATASET 
@@ -4147,6 +4129,8 @@ $-1--1--1,0,|12||-1--1--1|-1--1--1|-1--1--1|-1--1--1|-1--1--1|96,96,70,2
 
 :GRAPH Esc_precio
 :TITLE Precio de mercado por escenario
+:X-MIN 0
+:X-MAX 626
 :SCALE
 :VAR Precio de mercado
 :DATASET Base
@@ -4157,6 +4141,8 @@ $-1--1--1,0,|12||-1--1--1|-1--1--1|-1--1--1|-1--1--1|-1--1--1|96,96,70,2
 
 :GRAPH Esc_encasetamiento
 :TITLE Encasetamiento por escenario
+:X-MIN 0
+:X-MAX 626
 :SCALE
 :VAR Encasetamiento
 :DATASET Base
@@ -4167,6 +4153,8 @@ $-1--1--1,0,|12||-1--1--1|-1--1--1|-1--1--1|-1--1--1|-1--1--1|96,96,70,2
 
 :GRAPH Esc_produccion
 :TITLE Producción de huevos por escenario
+:X-MIN 0
+:X-MAX 626
 :SCALE
 :VAR Producción de huevos
 :DATASET Base
@@ -4177,6 +4165,8 @@ $-1--1--1,0,|12||-1--1--1|-1--1--1|-1--1--1|-1--1--1|-1--1--1|96,96,70,2
 
 :GRAPH Esc_costo
 :TITLE Costo unitario por escenario
+:X-MIN 0
+:X-MAX 626
 :SCALE
 :VAR Costo unitario
 :DATASET Base
@@ -4187,6 +4177,8 @@ $-1--1--1,0,|12||-1--1--1|-1--1--1|-1--1--1|-1--1--1|-1--1--1|96,96,70,2
 
 :GRAPH Esc_gallinas
 :TITLE Gallinas en postura por escenario
+:X-MIN 0
+:X-MAX 626
 :SCALE
 :VAR Gallinas en postura
 :DATASET Base
@@ -4197,6 +4189,8 @@ $-1--1--1,0,|12||-1--1--1|-1--1--1|-1--1--1|-1--1--1|-1--1--1|96,96,70,2
 
 :GRAPH Esc_productores
 :TITLE Productores activos por escenario
+:X-MIN 0
+:X-MAX 626
 :SCALE
 :VAR Productores activos
 :DATASET Base
@@ -4205,10 +4199,10 @@ $-1--1--1,0,|12||-1--1--1|-1--1--1|-1--1--1|-1--1--1|-1--1--1|96,96,70,2
 :VAR Productores activos
 :DATASET Entradas altas
 :L<%^E!@
-1:Validacion.vdfx
+1:Base.vdfx
 4:Time
 5:Tabla población
-9:Validacion
+9:Base
 19:70,0
 24:0
 25:626
