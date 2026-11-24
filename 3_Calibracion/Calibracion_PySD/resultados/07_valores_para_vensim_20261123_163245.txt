@@ -1,0 +1,27 @@
+Valores calibrados tomados de valores_cerrado.json
+
+1. Constantes (escribir el valor nuevo en el editor de ecuaciones de Vensim)
+   Tiempo de percepción del precio = 4.05694    (antes 6)
+   Tiempo de ajuste de gallinas = 25.9889    (antes 18)
+   Productores posibles = 3586.48    (antes 6000)
+   Tasa de contagio = 0.0113768    (antes 0.08)
+
+2. Tablas de efecto con escala distinta de 1
+   Sensibilidad de las gallinas deseadas al margen = 1.21169
+   Opción A, reemplazar los puntos de la tabla 'Efecto del margen en las gallinas deseadas' por:
+      [(-0.825295,0)-(0.825295,1.76)],(-0.825295,0.2),(-0.412647,0.5),(-0.206324,0.76),(0,1),(0.206324,1.24),(0.412647,1.44),(0.825295,1.6)
+   Opción B, dejar la tabla y crear la constante 'Sensibilidad de las gallinas deseadas al margen' = 1.21169, y en la variable
+      que usa la tabla escribir Efecto del margen en las gallinas deseadas(Sensibilidad de las gallinas deseadas al margen*Brecha de margen)
+
+
+3. Control: después de pegar los valores y simular en Vensim, estos números deben coincidir
+   (diferencias menores de 0,1 %; también están en comparar_con_vensim_calibrado.csv)
+
+   Semana          Encasetamiento       Precio de mercado    Producción de huevos          Costo unitario
+        0                  727677                 283.305             2.66776e+08                 211.177
+       52                  935117                 317.793             2.87011e+08                 216.623
+      104                  910506                 345.779             3.12139e+08                 246.269
+      208             1.00823e+06                 517.603             3.18133e+08                  420.96
+      312              1.0981e+06                 439.368              3.7016e+08                 323.206
+      364              1.1337e+06                 423.562             3.89856e+08                 308.602
+      403             1.26868e+06                 443.579             3.91205e+08                 307.505

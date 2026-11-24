@@ -1,0 +1,5 @@
+Copia de los archivos de la versión 1 de la calibración (21-nov-2026), hecha
+el 23-nov-2026 antes de correr la versión 2, que los reemplaza.
+Modelo calibrado: Modelo actual.mdl (md5 fcfb3bc54a45f624db2c5cfcf0d32fe0).
+Resultado final: Modelo calibrado.mdl (percepción 4, ajuste 26,
+productores posibles 4.450, contagio 0,012, sensibilidad 1).

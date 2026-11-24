@@ -1,0 +1,84 @@
+PRONÓSTICO DE LAS ENTRADAS DEL MODELO HASTA 2030
+Proyecto de Simulación, Univalle. Corrida del 20-nov-2026.
+
+Datos reales hasta sep-2026 (semana 403 del modelo). Pronóstico de oct-2026 a ene-2031, para que la
+semana 626 (31-dic-2030 a 6-ene-2031) tenga dato. Se pronostica por mes, la frecuencia en que se
+publican las fuentes, y después se pasa a semanas con las fórmulas de la base.
+
+
+1. QUÉ HAY EN LA CARPETA
+
+00_eleccion_ventana.R    Prueba hacia atrás de la ventana de entrenamiento (51, 93 y 144 meses y toda
+                         la historia) para maíz, torta de soya y TRM. Es opcional: solo respalda la
+                         ventana elegida. Tarda unos minutos.
+01_maiz.R                ARIMA en logaritmos con reglas de Box-Jenkins: d = 1, sin deriva, sin parte
+02_torta_soya.R          estacional, p y q de 0 a 2, menor AICc. Ventana: ene-2019 a sep-2026, el
+03_trm.R                 periodo que el modelo simula con datos. Validación con oct-2024 a sep-2026.
+04_ipc.R                 Senda de inflación del Banco de la República repartida por mes con la
+                         estacionalidad de 2019-2025. Un ARIMA estacional queda como contraste.
+05_salario_minimo.R      Salario del año = salario anterior x (1 + inflación dic/dic del año anterior
+                         + prima). La prima se mide en 2019-2026. Necesita la salida de 04.
+06_poblacion.R           Proyección del DANE (PPED 2018-2070), sin modelo propio.
+07_consumo_per_capita.R  Consumo per cápita de referencia. Pronóstico = media de la meseta 2022-2026.
+                         Lee la base (Base final- Borrador.xlsx).
+salidas/                 Un Excel por serie (hoja pronostico con base, bajo y alto; hoja metodo con el
+                         diagnóstico) y su gráfica. 01 a 03 dejan además el ACF/PACF y los residuos.
+
+
+2. CÓMO SE CORREN
+
+- Directorio de trabajo: la carpeta Articulo-Simulacion (abrir Articulo-Simulacion.Rproj). Los scripts
+  leen 1_Datos/Fuentes/ y 1_Datos/Base final- Borrador.xlsx y escriben en 4_Pronostico_2030/salidas/.
+  Rutas actualizadas el 23-nov-2026, cuando se reorganizó la carpeta.
+- R 4.2 o más reciente. Cada script instala lo que le falte (readxl, forecast, tseries, writexl,
+  ggplot2).
+- Orden: 01, 02, 03, 04, 05, 06, 07. El 04 siempre antes del 05. El 00 se corre aparte.
+
+
+3. QUÉ SE HACE CON LAS SALIDAS
+
+- "Base final con pronostico 2030.xlsx" tiene los valores de estas salidas en dos hojas:
+  pronostico_mensual (maíz, torta, TRM, IPC y salario por mes) y pronostico_anual (población, salario
+  y consumo de referencia por año). Las hojas mensual, anual y semanal toman de ahí los meses y años
+  pronosticados y los pasan a semanas con las mismas fórmulas de la base.
+- Las tablas de Vensim salen de la hoja semanal (escenario base) y de escenarios_semanal (bajo y alto):
+  Tablas_Vensim_semanales_2030.txt, Tablas_Vensim_escenario_bajo_2030.txt y
+  Tablas_Vensim_escenario_alto_2030.txt. En el modelo hay que poner FINAL TIME = 626.
+- Las tablas de encasetamiento, producción, precio y costo de Fenavi no se pronostican: son variables
+  que el modelo calcula y sus tablas solo sirven para comparar, así que terminan en la semana 403.
+
+
+4. ESCENARIOS
+
+- Base: pronóstico central.
+- Bajo y alto:
+    maíz, torta, TRM y consumo de referencia: límites del intervalo de predicción de 80 %;
+    IPC: 2027 con 4,4 % (MFMP 2026) y 5,19 % (Encuesta de expectativas, oct-2026); desde 2028, 2 % y
+    4 %, el rango de la meta;
+    salario: prima de 0 (piso legal) y de 4,45 puntos, con la inflación de su mismo escenario.
+- La población tiene un solo escenario.
+- Para correr un escenario en Vensim: hacer una copia del modelo y reemplazar las seis tablas por las
+  del archivo del escenario (tienen los mismos nombres).
+
+
+5. PARA ACTUALIZAR
+
+- Salario de 2027: se decreta en diciembre de 2026. Cuando salga, se escribe en la línea
+  salario_2027_decretado de 05_salario_minimo.R, se corre el 05 y se reemplazan los salarios de 2027 a
+  2031 en pronostico_anual.
+- Si cambian los datos, se corren de nuevo los scripts y se reemplazan los valores de
+  pronostico_mensual y pronostico_anual (texto azul con fondo naranja claro).
+- Si cambia la elasticidad del modelo (0,462), se cambia en 07_consumo_per_capita.R y se corre otra vez.
+
+
+6. FUENTES DE LOS SUPUESTOS
+
+- Banco de la República, Informe de Política Monetaria, octubre de 2026: inflación de 7,1 % al
+  cierre de 2026 y 4,8 % en 2027, acercándose a la meta de 3 % en 2028. Desde 2028 se usa la meta.
+- Ministerio de Hacienda, Marco Fiscal de Mediano Plazo 2026: inflación de 4,4 % en 2027.
+- Banco de la República, Encuesta mensual de expectativas de analistas, octubre de 2026: 5,19 % en
+  2027.
+- Corte Constitucional, Sentencia C-815 de 1999: el reajuste del salario mínimo no puede ser inferior
+  a la inflación del año que termina.
+- Datos: Banco Mundial (Pink Sheet), Banco de la República (TRM y salario mínimo), DANE (IPC y
+  proyecciones de población), Fenavi y DANE-SIPSA (vía la base).

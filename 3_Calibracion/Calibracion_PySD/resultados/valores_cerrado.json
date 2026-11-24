@@ -1,0 +1,31 @@
+{
+  "fecha": "2026-11-23T16:23:10",
+  "valores": {
+    "Tiempo de percepción del precio": 4.056939581902827,
+    "Tiempo de ajuste de gallinas": 25.98890444763251,
+    "Sensibilidad de las gallinas deseadas al margen": 1.2116882998217884,
+    "Sensibilidad de la vida productiva al margen": 1,
+    "Productores posibles": 3586.477033874051,
+    "Tasa de contagio": 0.011376825562692837,
+    "Sensibilidad de la entrada al margen": 1,
+    "Tiempo para decidir ampliaciones": 15,
+    "Fracción de galpones que se desmontan": 0.2,
+    "Tiempo para ocupar galpones": 20,
+    "Sensibilidad de la ocupación al margen": 1,
+    "Tiempo de reposición": 4,
+    "Tiempo para percibir la demanda": 52,
+    "Fracción de la línea de suministro considerada": 0.34,
+    "Tiempo de salida": 52,
+    "Tiempo de construcción": 26,
+    "Tiempo de retiro de utilidades": 26,
+    "Participación del productor en el precio": 0.83
+  },
+  "calibrados": [
+    "Sensibilidad de las gallinas deseadas al margen",
+    "Tiempo de ajuste de gallinas",
+    "Tiempo de percepción del precio",
+    "Productores posibles",
+    "Tasa de contagio"
+  ],
+  "error": 9.759770962900937
+}

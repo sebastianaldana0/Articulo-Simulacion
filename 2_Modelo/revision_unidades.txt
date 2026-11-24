@@ -1,0 +1,131 @@
+
+***********************************************
+Aviso: unidades en la ecuacion para -Consumo per cápita de referencia
+ 
+Tabla - Tabla consumo per cápita de referencia - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Consumo per cápita de referencia
+ 
+Tabla - Tabla consumo per cápita de referencia alto - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Consumo per cápita de referencia
+ 
+Tabla - Tabla consumo per cápita de referencia bajo - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Costo Fenavi observado 
+Tabla - Tabla costo Fenavi - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Encasetamiento observado 
+Tabla - Tabla encasetamiento observado - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Índice de precios 
+Tabla - Tabla IPC - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Índice de precios 
+Tabla - Tabla IPC alto - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Índice de precios 
+Tabla - Tabla IPC bajo - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Índice de precios 
+Tabla - Tabla IPC - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Índice del salario mínimo 
+Tabla - Tabla salario mínimo - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Índice del salario mínimo 
+Tabla - Tabla salario mínimo alto - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Índice del salario mínimo 
+Tabla - Tabla salario mínimo bajo - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Índice del salario mínimo 
+Tabla - Tabla salario mínimo - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Población 
+Tabla - Tabla población - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Precio de mercado observado 
+Tabla - Tabla precio observado - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Precio internacional de la torta de soya
+ 
+Tabla - Tabla precio de la torta de soya - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Precio internacional de la torta de soya
+ 
+Tabla - Tabla precio de la torta de soya alto - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Precio internacional de la torta de soya
+ 
+Tabla - Tabla precio de la torta de soya bajo - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Precio internacional del maíz 
+Tabla - Tabla precio del maíz - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Precio internacional del maíz 
+Tabla - Tabla precio del maíz alto - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Precio internacional del maíz 
+Tabla - Tabla precio del maíz bajo - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Producción observada 
+Tabla - Tabla producción observada - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Tasa de cambio 
+Tabla - Tabla TRM - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Tasa de cambio 
+Tabla - Tabla TRM alto - usado con argumento acotado
+ Week
+
+***********************************************
+Aviso: unidades en la ecuacion para -Tasa de cambio 
+Tabla - Tabla TRM bajo - usado con argumento acotado
+ Week

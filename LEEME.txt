@@ -1,0 +1,31 @@
+CARPETA DEL ARTÍCULO: CICLO DEL HUEVO EN COLOMBIA
+Organizada el 23-nov-2026. No se borró ningún archivo: lo que ya no se usa está en Archivo/.
+
+1_Datos/               Base final- Borrador.xlsx (base de datos del modelo), Borrador.xlsx,
+                       Tablas_Vensim_semanales.txt y Tablas_Vensim_desde_base.txt.
+                       Fuentes/: archivos originales descargados (Fenavi, DANE, SIPSA, ICA,
+                       Banco Mundial, Banco de la República).
+2_Modelo/              Modelo huevo.mdl, el modelo definitivo, con sus corridas de Vensim
+                       (Validacion, Base, Entradas bajas, Entradas altas). Ver LEEME.txt.
+                       Parametros_modelo_fuentes.md: parámetros con su fuente.
+3_Calibracion/         Modelo actual v2.mdl (el modelo antes de calibrar, versión 2) y
+                       Calibracion_PySD/ (scripts y registro de la calibración).
+4_Pronostico_2030/     Pronóstico de las entradas hasta 2030 (scripts de R y salidas).
+5_Analisis_datos_R/    Untitled.R y figuras_articulo.R (análisis descriptivo), con sus salidas
+                       en resultados/ y figuras_articulo/.
+6_Articulo/            articulo.tex, referencias.bib, export.bib, la plantilla .bst, figuras/
+                       del artículo y borradores/ (Avicola borrador.docx y análisis descriptivo).
+7_Resultados/          Resultados_modelo_huevo.docx, figuras/, series semanales de las corridas
+                       y verificacion_vensim/.
+Archivo/               Versiones anteriores: modelos (modelos_anteriores/), corridas viejas,
+                       submodelo de costos, calibración del modelo de los compañeros
+                       (Calibracion_Modelo_final/) y escenarios de la versión 1.
+
+RUTAS
+- Los scripts de R se corren desde la raíz: abrir Articulo-Simulacion.Rproj. Ya leen
+  1_Datos/... y escriben en su propia carpeta.
+- Calibracion_PySD busca el modelo en la carpeta de arriba (3_Calibracion/Modelo actual v2.mdl).
+  Si el entorno .venv de VS Code deja de funcionar después del cambio de carpeta, se vuelve a
+  seleccionar el intérprete (.venv\Scripts\python.exe) o se instala de nuevo con
+  python -m pip install -r requirements.txt.
+- articulo.tex sigue compilando: figuras/ y referencias.bib están a su lado.

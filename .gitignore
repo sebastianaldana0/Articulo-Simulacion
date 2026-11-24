@@ -3,9 +3,9 @@
 .RData
 .Ruserdata
 # Calibración con PySD (entorno y archivos temporales)
-Calibracion_PySD/.venv/
-Calibracion_PySD/modelo/
-Calibracion_PySD/.mplconfig/
-Calibracion_PySD/matplotlib-*/
-Calibracion_PySD/.pipcache/
+.venv/
+3_Calibracion/Calibracion_PySD/modelo/
+.mplconfig/
+matplotlib-*/
+.pipcache/
 __pycache__/

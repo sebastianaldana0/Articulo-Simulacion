@@ -1,0 +1,236 @@
+CALIBRACIÓN DEL MODELO DEL HUEVO CON PYSD
+Versión 1 del 21-nov-2026; versión 2 del 23-nov-2026 (sección 0).
+
+Ubicación desde el 23-nov-2026: esta carpeta va en 3_Calibracion/, al lado de
+Modelo actual v2.mdl (el modelo antes de calibrar). El modelo definitivo, con
+los valores calibrados y los escenarios, es 2_Modelo/Modelo huevo.mdl.
+
+
+------------------------------------------------------------------------
+0. VERSIÓN 2 (23-nov-2026)
+------------------------------------------------------------------------
+
+La revisión de estructura encontró que la Caja relativa comparaba la caja
+de cada semana, en pesos corrientes, con la de enero de 2019. Por eso subía
+sola con la inflación y con la producción por productor, y con el tiempo
+apagaba la salida de productores y la cuota. En "Modelo actual v2.mdl" la
+caja se mide contra la caja normal de cada semana:
+
+  Caja normal = Margen normal × Costo unitario × Producción por productor
+                × Tiempo de retiro de utilidades
+
+Es el único cambio de ecuaciones frente a la versión 1. Cambios en esta
+carpeta:
+  - config.py: RUTA_MODELO_VENSIM apunta a Modelo actual v2.mdl. PESO_ICA
+    = 0,25 suma al error del modelo cerrado (pasos 5 y 6) el error de los
+    productores frente a los predios del ICA, como decía el plan (paso 3e).
+    Con PESO_ICA = 0 el error es el mismo de la versión 1.
+  - herramientas.py: función error_ica y término del ICA en objetivo.
+  - 06: los perfiles usan el mismo error del paso 5 y muestran error_ica.
+  - 05: la solución de la versión 1 entra como segundo punto de partida y
+    N_INICIOS_CERRADO pasa a 4 (paso 4, versión 1 y dos al azar). El error
+    tiene dos mínimos: uno con percepción rápida (unas 4 semanas) y otro con
+    percepción lenta (20 a 26). En la prueba del 23-nov, arrancando solo
+    desde el paso 4, el optimizador se quedó en el lento (error 10,88); con el
+    punto de la versión 1 llegó al rápido (9,76).
+  - 07: se quitó el bloque FINALES que estaba al final del archivo (no
+    tenía efecto, porque iba después de escribir los resultados).
+  - resultados/version_1/: copia de valores_regla.json, valores_cerrado.json
+    y vensim_base.txt de la versión 1, porque los pasos 4, 5 y 2 los
+    reemplazan. El registro sigue en el mismo archivo: el md5 de cada línea
+    dice con qué modelo salió.
+
+Pasos de la versión 2: 01; 02 con un vensim_base.txt nuevo, sacado de
+Modelo actual v2.mdl; 04; 05; 06 y 07. El 03 es opcional.
+
+Resultado de la prueba del 23-nov (para comparar con lo que salga):
+  paso 4: sensibilidad 0,17, ajuste 26, percepción 24,4; encasetamiento 8,9 %.
+  paso 5: error 9,76 = encasetamiento 8,51 × 0,5 + precio 7,26 × 0,5 +
+          ICA 7,50 × 0,25; sensibilidad 1,21, ajuste 26, percepción 4,06,
+          productores posibles 3.586, contagio 0,0114.
+
+
+Estos scripts calibran Modelo actual.mdl fuera de Vensim. PySD lee el mismo
+archivo .mdl y lo corre en Python; SciPy busca los valores de los parámetros
+sin fuente (clase K) que minimizan el error contra los datos de 2019-2025.
+Los valores finales se pegan en Vensim y se comprueba que Vensim da lo mismo.
+Cada script deja una línea en registro_calibracion.csv y guarda sus tablas y
+gráficas en la carpeta resultados.
+
+
+------------------------------------------------------------------------
+1. INSTALACIÓN (una sola vez)
+------------------------------------------------------------------------
+
+1.1 Instalar Python
+    - Entrar a https://www.python.org/downloads/windows/ y descargar el
+      instalador de Python 3.12 para Windows de 64 bits ("Windows installer
+      (64-bit)"). Sirve también la 3.13.
+    - Al abrir el instalador, marcar la casilla "Add python.exe to PATH" y
+      después "Install Now".
+    - Comprobar: abrir PowerShell y escribir   py --version
+      Debe responder Python 3.12.x (o 3.13.x).
+
+1.2 Copiar esta carpeta
+    Calibracion_PySD va dentro de la carpeta del artículo, al lado de
+    Modelo actual.mdl:
+      ...\SIMULACIÓN\Articulo-Simulacion\Calibracion_PySD\
+    Si el modelo está en otra parte o con otro nombre, se cambia
+    RUTA_MODELO_VENSIM en config.py.
+
+1.3 Abrir una terminal en la carpeta
+    En el Explorador, entrar a Calibracion_PySD, clic derecho en un espacio
+    vacío y "Abrir en Terminal". En Windows 10: escribir powershell en la barra
+    de dirección de la carpeta y Enter.
+
+1.4 Crear el entorno de Python del proyecto
+      py -m venv .venv
+      .venv\Scripts\Activate.ps1
+    Si PowerShell dice que la ejecución de scripts está deshabilitada,
+    escribir una vez
+      Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+    y repetir la segunda línea. Cuando el entorno está activo, la línea de la
+    terminal empieza con (.venv).
+
+1.5 Instalar los paquetes (necesita internet, tarda unos minutos)
+      pip install -r requirements.txt
+    PySD queda fijo en la versión 3.14.3 porque rapido.py depende de ella.
+
+1.6 Git
+    La carpeta queda dentro del repositorio del grupo. Agregar al archivo
+    .gitignore de Articulo-Simulacion estas líneas:
+      Calibracion_PySD/.venv/
+      Calibracion_PySD/modelo/
+      __pycache__/
+    Los resultados y registro_calibracion.csv sí conviene subirlos: son el
+    registro de la calibración.
+
+Opcional: Visual Studio Code con la extensión Python. Se abre la carpeta,
+se elige el intérprete .venv y cada script se corre con el botón de ejecutar.
+
+
+------------------------------------------------------------------------
+2. CADA VEZ QUE SE TRABAJE
+------------------------------------------------------------------------
+
+Abrir la terminal en Calibracion_PySD, activar el entorno y correr el paso:
+      .venv\Scripts\Activate.ps1
+      python 01_probar_instalacion.py
+
+Si Modelo actual.mdl cambió, los scripts lo notan, lo vuelven a copiar y a
+traducir solos. El registro guarda el md5 del .mdl usado en cada corrida, así
+se sabe con qué versión del modelo salió cada resultado.
+
+
+------------------------------------------------------------------------
+3. LOS PASOS, EN ORDEN
+------------------------------------------------------------------------
+
+Paso 1. python 01_probar_instalacion.py                    (segundos)
+    Revisa versiones, traduce el modelo y corre la base con los valores
+    actuales. Muestra el error de cada serie en 2019-2025 (calibración) y en
+    ene-sep 2026 (prueba). Deja comparar_con_vensim_base.csv.
+
+Paso 2. python 02_comparar_con_vensim.py                   (segundos)
+    Comprueba que PySD y Vensim dan lo mismo. Antes:
+      a. En Vensim, simular Modelo actual.mdl sin cambiar nada.
+      b. Seleccionar Encasetamiento en el diagrama y abrir la herramienta de
+         análisis "Table Time Down".
+      c. Copiar la tabla y pegarla en el Bloc de notas. Repetir con Precio de
+         mercado, Producción de huevos y Costo unitario, pegando cada tabla
+         debajo de la anterior.
+      d. Guardar como vensim_base.txt en esta carpeta. No pegarlo en Excel:
+         Excel en español cambia los puntos decimales.
+    Si sale "PySD y Vensim coinciden", se sigue. Si no, se para y se revisa.
+
+Paso 3. python 03_tamizaje.py                              (2 a 4 minutos)
+    Corre el modelo 300 veces con valores al azar de los 18 parámetros de
+    config.py (11 de clase K y 7 supuestos de clase S) y mide la correlación
+    de Spearman entre cada parámetro y el error.
+    Cómo se lee: los parámetros con correlación cercana a cero no mueven el
+    error. Después de este paso se editan en config.py las listas
+    CALIBRAR_REGLA y CALIBRAR_CERRADO con los parámetros K que sí pesan
+    (como guía, correlación de 0,2 o más en valor absoluto). Los S que pesen
+    no se calibran: van al análisis de sensibilidad del artículo.
+
+Paso 4. python 04_calibrar_regla.py                        (5 a 15 minutos)
+    Prueba parcial: el precio y el costo se reemplazan por los observados y
+    se calibran los parámetros de CALIBRAR_REGLA contra el encasetamiento.
+    El optimizador (Powell, el mismo método de Vensim Professional) arranca
+    desde los valores actuales y desde tres puntos al azar.
+    Qué mirar: el error antes y después; que ningún valor quede pegado al
+    límite de su rango (el script avisa); la gráfica.
+    Deja resultados/valores_regla.json.
+
+Paso 5. python 05_calibrar_cerrado.py                      (5 a 15 minutos)
+    Modelo completo. Parte de los valores del paso 4 y calibra
+    CALIBRAR_CERRADO contra el encasetamiento y el precio (mitad y mitad,
+    PESOS_CERRADO en config.py). Compara además con el censo del ICA.
+    Deja resultados/valores_cerrado.json.
+
+Paso 6. python 06_diagnostico.py                           (1 a 2 minutos)
+    Revisa la calibración:
+      - Theil: U^C debe llevar la mayor parte del error. U^M alto = sesgo de
+        nivel; U^S alto = amplitud distinta.
+      - Prueba fuera de muestra (ene-sep 2026), con los parámetros fijos.
+      - Residuos mensuales: sin tendencia ni ciclo propio.
+      - Perfiles: si la curva de un parámetro es plana, los datos no lo
+        definen; mejor fijarlo con su fuente y decirlo en el artículo.
+      - Amplitud (1 = igual a la observada), desfase en meses (positivo =
+        el modelo va atrasado) y período de la autocorrelación.
+
+Paso 7. python 07_valores_para_vensim.py                   (segundos)
+    Escribe los valores para pegar en Vensim (constantes y, si alguna escala
+    quedó distinta de 1, la tabla de efecto nueva) y una tabla de control.
+    Después de pegarlos en Vensim y simular, el encasetamiento, el precio,
+    la producción y el costo en las semanas de control deben coincidir.
+
+Prueba manual. python probar_valores.py
+    Para ensayar valores a mano, como en SyntheSim, pero con registro. Se
+    escriben DESCRIPCION, MODO y VALORES al comienzo del archivo y se corre.
+
+Para revisar que todo corre sin esperar, se puede activar el modo rápido
+(pocas corridas) antes de un paso:
+      $env:PRUEBA_RAPIDA="1"
+y desactivarlo con
+      Remove-Item Env:PRUEBA_RAPIDA
+Lo que salga en modo rápido no es una calibración.
+
+
+------------------------------------------------------------------------
+4. DETALLES DEL MÉTODO
+------------------------------------------------------------------------
+
+- Ventanas: calibración semanas 0 a 364 (1-ene-2019 a 29-dic-2025); prueba
+  semanas 365 a 403 (30-dic-2025 a 28-sep-2026).
+- El error se calcula con promedios mensuales, porque los datos semanales
+  salen de datos mensuales (84 meses en la ventana de calibración).
+- Rangos de los parámetros: config.py, tomados de huevo-parametros-fuentes.
+  Cambiar un rango exige una razón que se pueda escribir en el artículo.
+- Escalas de las tablas de efecto: un valor e equivale a usar la tabla con
+  e × Brecha de margen. Con 1, la tabla queda como está. En Vensim se pasa
+  cambiando los puntos de la tabla o con una constante nueva (el paso 7
+  escribe las dos opciones).
+- La prueba parcial no cambia el .mdl: PySD reemplaza el precio y el costo
+  por las series observadas mientras corre.
+- Cada corrida tarda menos de medio segundo gracias a rapido.py, que cambia
+  la forma de interpolar las tablas sin cambiar los resultados.
+
+Frase para el artículo (ajustar con los valores finales): "Los parámetros
+sin fuente se estimaron minimizando el error porcentual absoluto medio
+mensual del encasetamiento y del precio entre 2019 y 2025, con el método de
+Powell acotado (SciPy) aplicado al modelo traducido con PySD 3.14.3; los
+valores se verificaron en Vensim PLE 10.5.2."
+
+
+------------------------------------------------------------------------
+5. SI ALGO FALLA
+------------------------------------------------------------------------
+
+- "No module named pysd": el entorno no está activo (paso 1.4).
+- "No encuentro el modelo de Vensim": revisar RUTA_MODELO_VENSIM en config.py.
+- "Estos nombres no están en config.PARAMETROS": el nombre en
+  probar_valores.py o en las listas de config.py no coincide letra por letra
+  (tildes incluidas).
+- Un error al traducir el modelo: Vensim abrió y guardó el .mdl con algo que
+  PySD no reconoce. Guardar la salida de la terminal y avisar.

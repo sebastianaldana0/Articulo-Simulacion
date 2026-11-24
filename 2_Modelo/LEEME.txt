@@ -1,0 +1,47 @@
+MODELO DEFINITIVO: Modelo huevo.mdl
+23-nov-2026
+
+QUÉ ES
+Modelo actual v2.mdl (caja del productor medida contra la caja normal) con los valores de la
+calibración del 23-nov-2026 y preparado para los escenarios de entradas.
+
+- Valores calibrados: sensibilidad de las gallinas deseadas al margen 1,2 (constante nueva que
+  multiplica la brecha de margen en la tabla de efecto; la tabla no cambió), tiempo de ajuste
+  de gallinas 26, tiempo de percepción del precio 4, productores posibles 3.600 y tasa de
+  contagio 0,0114.
+- TIME STEP = 1 semana (la calibración usó 0,25; la diferencia máxima es 2,3 % en el
+  encasetamiento). FINAL TIME = 626 (31-dic-2030).
+- Tablas de entrada hasta la semana 626 con Pronostico_2030: maíz, torta de soya, TRM, IPC,
+  salario mínimo y consumo per cápita de referencia tienen tres tablas (base, bajo y alto);
+  la población tiene una.
+- Unidades: «huevos» pasó a «huevo» en las unidades para que Vensim no las tome como dos
+  unidades distintas.
+
+DOS CONSTANTES DEFINEN LAS CORRIDAS
+Interruptor del encasetamiento observado   0 = todo el encasetamiento lo decide el modelo
+                                           1 = dato de Fenavi hasta la semana 403 y modelo desde la 404
+Escenario de entradas                      1 = base, 2 = entradas bajas, 3 = entradas altas
+
+Corrida            Interruptor   Escenario
+Validacion         0             1
+Base               1             1
+Entradas bajas     1             2
+Entradas altas     1             3
+
+El archivo queda con 0 y 1 (Validacion). Para repetir una corrida: cambiar el valor de las dos
+constantes en su ecuación (están junto a Encasetamiento y junto a los choques de precios),
+escribir el nombre en Nombre de simulación y simular. Al terminar, volver a 0 y 1. Cada .vdfx
+guarda los valores con que se corrió.
+
+GRÁFICAS
+Panel de control > Gráficos personalizados: Esc_precio, Esc_encasetamiento, Esc_produccion,
+Esc_costo, Esc_gallinas y Esc_productores comparan Base, Entradas bajas y Entradas altas
+(hay que tenerlas cargadas en Administrador de conjuntos de datos). Las gráficas simulado
+frente a observado siguen con la corrida que esté de primera.
+
+AVISOS QUE SALEN Y NO SON ERRORES
+- Al simular: LOOKUP_BOUNDS de Encasetamiento observado, Precio de mercado observado,
+  Producción observada y Costo Fenavi observado. Esas tablas terminan con los datos (semana
+  403; el costo en la 470) y después repiten el último valor; solo sirven para comparar.
+- Revisión de unidades: 25 avisos de tablas de datos que se leen con Time. Ningún error
+  (revision_unidades.txt).
